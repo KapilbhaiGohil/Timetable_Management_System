@@ -1,0 +1,255 @@
+body {
+  overflow: hidden;
+}
+
+.font-family-inter {
+  font-family: Inter;
+}
+
+.font-family-poppins {
+  font-family: Poppins;
+}
+
+.signup-container {
+  display: flex;
+}
+
+.box {
+  width: 50%;
+  padding: 20px;
+}
+
+.signup-image-container {
+  display: flex;
+  flex-direction: column;
+  height: 1280px;
+  background-color: white;
+  padding: 50px;
+}
+
+.signup-image {
+  margin-top: 48px;
+  margin-left: 20px;
+  width: 600px;
+  height: 600px;
+  background-image: url("../assets/images/signupVector.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  object-fit: fill;
+  border-radius: 12px;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  height: 1280px;
+  background-color: white;
+  padding: 50px;
+}
+
+.signup-temp-text {
+  margin-top: 30px;
+  width: 700px;
+  height: 170px;
+  background-color: white;
+}
+
+.text-free {
+  font-size: 16px;
+  font-family: Inter;
+  color: #bbbbbb;
+}
+
+.text-timetune {
+  margin-top: 10px;
+  font-size: 56px;
+  font-family: Inter;
+  color: #717794;
+}
+
+.text-signin {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.text-signin-prefix {
+  font-size: 16px;
+  font-family: Inter;
+  color: #bbbbbb;
+}
+
+.text-signin-suffix {
+  font-size: 16px;
+  font-family: Inter;
+  color: #336cff;
+  text-decoration: none;
+}
+
+.text-signin-suffix :hover {
+  cursor: pointer;
+}
+
+.size-box {
+  width: 5px;
+}
+
+.signup-details {
+  margin-top: 10px;
+  width: 700px;
+  height: 450px;
+  background-color: white;
+}
+
+.email-div {
+  margin-top: 15px;
+}
+
+.password-div {
+  margin-top: 15px;
+}
+
+.form-label {
+  margin-top: 45px;
+  color: #717794;
+  font-size: 24px;
+  font-weight: 500;
+  font-family: Poppins;
+}
+
+.button-signup {
+  margin-top: 60px;
+  width: 604px;
+  height: 70px;
+  align-items: center;
+  justify-content: center;
+  font-family: Poppins;
+  font-size: 26px;
+  font-weight: 400;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  background-color: #336cff;
+}
+
+@media screen and (max-width: 800px) {
+  body {
+    overflow: hidden;
+  }
+
+  .signup-image-container {
+    display: none;
+    flex-direction: column;
+    height: 1280px;
+    background-color: aqua;
+    padding: 50px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .signup-form {
+    display: flex;
+    margin-top: 100px;
+    margin-left: 30px;
+    flex-direction: column;
+    height: 1280;
+    width: 100%;
+    background-color: white;
+    padding: 50px;
+  }
+
+  .email-div {
+    margin-top: 25px;
+  }
+
+  .password-div {
+    margin-top: 25px;
+  }
+
+  .text-free {
+    font-size: 26px;
+    font-family: Inter;
+    color: #bbbbbb;
+  }
+
+  .text-timetune {
+    margin-top: 10px;
+    font-size: 66px;
+    font-family: Inter;
+    color: #717794;
+  }
+
+  .text-signin-prefix {
+    font-size: 26px;
+    font-family: Inter;
+    color: #bbbbbb;
+  }
+
+  .text-signin-suffix {
+    font-size: 26px;
+    font-family: Inter;
+    color: #336cff;
+    text-decoration: none;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1200px) {
+  body {
+    overflow: scroll;
+  }
+
+  .signup-image-container {
+    display: none;
+    flex-direction: column;
+    height: 1280px;
+    background-color: aqua;
+    padding: 50px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .signup-form {
+    display: flex;
+    margin-top: 100px;
+    margin-left: 80px;
+    flex-direction: column;
+    height: 1280;
+    width: 100%;
+    background-color: white;
+    padding: 50px;
+  }
+
+  .email-div {
+    margin-top: 25px;
+  }
+
+  .password-div {
+    margin-top: 25px;
+  }
+
+  .text-free {
+    font-size: 26px;
+    font-family: Inter;
+    color: #bbbbbb;
+  }
+
+  .text-timetune {
+    margin-top: 10px;
+    font-size: 66px;
+    font-family: Inter;
+    color: #717794;
+  }
+
+  .text-signin-prefix {
+    font-size: 26px;
+    font-family: Inter;
+    color: #bbbbbb;
+  }
+
+  .text-signin-suffix {
+    font-size: 26px;
+    font-family: Inter;
+    color: #336cff;
+    text-decoration: none;
+  }
+}
