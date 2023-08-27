@@ -29,7 +29,7 @@ function Login() {
               </div>
               <label id = "label-detail" className = "font-family-poppins">Password</label>
               <div id = "password-field" className = "input-field">
-                <input type = "text" placeholder = "6+ character" className = "email-field font-family-poppins" />
+                <input type = "password" placeholder = "6+ character" className = "email-field font-family-poppins" />
                 <div className = "icon-container">
                   <FiUnlock size = "30px" color = "#717794" className = "icon-field"/>
                 </div>

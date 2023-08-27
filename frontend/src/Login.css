@@ -217,7 +217,12 @@ input[type="text"]:focus {
 
   .label-suffix {
     margin-top: 30px;
-    margin-left: 150px;
+    margin-left: 80px;
+    font-size: 20px;
+  }
+
+  .label-signin {
+    font-size: 26px;
   }
 
   .email-field {
@@ -234,7 +239,7 @@ input[type="text"]:focus {
     outline: none;
   }
 
-  input[type="text"]:focus {
+  input[type="password"]:focus {
     outline: none;
   }
 
@@ -243,6 +248,12 @@ input[type="text"]:focus {
     color: #717794;
     font-size: 24px;
     font-weight: 500;
+  }
+
+  #label-info {
+    margin-top: 10px;
+    color: #bbbbbb;
+    font-size: 26px;
   }
 }
 
