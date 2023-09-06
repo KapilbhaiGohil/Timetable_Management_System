@@ -1,0 +1,29 @@
+.Navbar{
+  background-color: darkgray;
+    >main {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 50%;
+      padding: 1rem;
+      .links{
+        display: flex;
+        flex-direction: row;
+        width: 20%;
+        justify-content: space-evenly;
+        a{
+          font-size: 15px;
+          font-weight: 400;
+          color: black;
+        }
+      }
+      .heading{
+        h1{
+          font: 24px italic cursive ;
+        }
+      }
+    }
+}

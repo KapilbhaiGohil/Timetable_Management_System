@@ -1,2 +1,0 @@
-This folder will contatins the all css we
-will use in our project
