@@ -1,0 +1,34 @@
+@import "../Higher-Level-Css/Colors";
+.input-container{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  color: white;
+  padding: 1rem;
+  flex-wrap: wrap;
+  .label-field{
+    label{
+      display: flex;
+      width: 100%;
+      font: 1.2rem $text1, sans-serif;
+    }
+  }
+  .input-field{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 1rem;
+    border:1rem solid $first;
+    background-color: $first;
+    input{
+      width: 100%;
+      height: 100%;
+      background-color: $first;
+      font-size: 1.2rem;
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+  }
+}

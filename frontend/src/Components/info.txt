@@ -1,2 +1,0 @@
-this folder will contains the all components
-which we will use in the project

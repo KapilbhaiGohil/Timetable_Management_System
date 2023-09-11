@@ -1,2 +1,0 @@
-This folder will contains the files
-like images,photoes,logoes,videos etc.
