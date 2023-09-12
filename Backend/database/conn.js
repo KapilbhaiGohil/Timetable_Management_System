@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
-const dotenv = require('dotenv')
 const {mongo} = require("mongoose");
-dotenv.config({path:'./config.env'})
 
 const db_local = process.env.LOCALDATABASE
 const db_remote = process.env.REMOTEDATABASE

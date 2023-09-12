@@ -4,7 +4,39 @@ import {VscUnlock} from "react-icons/vsc"
 import image from "../../Assets/login.svg"
 import Input from "../Small-Level-Componenets/Input";
 import Button from "../Small-Level-Componenets/Button"
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 export  default  function Login(){
+    const Navigate = useNavigate();
+    const [email,setEmail] = useState("");
+    const [pass,setPass] = useState("");
+    const handleEmail = (e)=>{
+        setEmail(e.target.value);
+    }
+    const handlePass = (e)=>{
+        setPass(e.target.value);
+    }
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        try{
+            const res =await fetch("/login",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                },
+                body:JSON.stringify({email:email,pass:pass}),
+            });
+            const data = await  res.json();
+            if(res.status === 201){
+                window.alert(data.message);
+                Navigate("/home");
+            }else{
+                window.alert(data.message);
+            }
+        }catch (e){
+            console.log(e);
+        }
+    }
     return (
         <div className={"outer"}>
             <div className={"heading"}>
@@ -23,9 +55,11 @@ export  default  function Login(){
                         </div>
                     </div>
                     <div className={"inputs-container"}>
-                        <div><Input label={"E-mail"} type={"email"} icon={<AiOutlineMail size={"2rem"}  color={"#1976d2"}/>}/></div>
-                        <div><Input label={"Password"} type={"password"} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
-                        <div className={"btn-container"}><Button label={"Log in"} type={"submit"}/></div>
+                        <form onSubmit={handleSubmit}>
+                            <div><Input label={"E-mail"} name={"email"} onchange={handleEmail} type={"email"} icon={<AiOutlineMail size={"2rem"}  color={"#1976d2"}/>}/></div>
+                            <div><Input label={"Password"} name={"password"} onchange={handlePass} type={"password"} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
+                            <div className={"btn-container"}><Button label={"Log in"} type={"submit"}/></div>
+                        </form>
                     </div>
                 </div>
             </div>
