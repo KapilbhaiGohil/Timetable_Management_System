@@ -1,0 +1,32 @@
+@import "../Higher-Level-Css/Colors";
+
+.time-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0.8rem;
+  color: $first;
+  font: 1rem "Roboto";
+  .inner-container{
+    display: flex;
+    flex-direction: column;
+    >div{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0.3rem;
+      >input{
+        width: auto;
+        height: 2rem;
+        border-radius: 0.4rem;
+        outline: none;
+        padding: 1rem;
+      }
+    }
+  }
+}

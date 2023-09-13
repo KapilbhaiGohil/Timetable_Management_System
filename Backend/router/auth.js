@@ -26,7 +26,7 @@ router.post('/login',async(req,res)=>{
 router.post('/register',async (req,res)=>{
     try{
         const {name,email,password} = req.body;
-        if(!name || !email || !password)return res.status(422).send({"messsge":"missing data"})
+        if(!name || !email || !password)return res.status(422).send({"message":"missing data"})
         const user = await User.findOne({email:email});
         if(user)return res.status(422).send({"message":"user with this email already exists"})
         const newuser = new User({name,email,password})

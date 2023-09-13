@@ -32,6 +32,7 @@ export  default  function Login(){
                 Navigate("/home");
             }else{
                 window.alert(data.message);
+                // Navigate("/register");
             }
         }catch (e){
             console.log(e);
