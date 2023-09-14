@@ -6,7 +6,7 @@ export  default  function Home(){
     return (
         <div>
             <h1>Hello I am a home page</h1>
-            <TimeTableView total_semesters={8} odd={true}/>
+            <TimeTableView/>
         </div>
     )
 }

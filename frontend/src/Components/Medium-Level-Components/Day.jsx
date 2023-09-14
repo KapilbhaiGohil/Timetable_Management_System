@@ -1,24 +1,45 @@
 import SemRow from "./SemRow";
 import "../../Css/Medium-Level-Css/Day.scss"
-export default function Day(){
+import Button from "../Small-Level-Componenets/Button"
+import {useState} from "react";
+import LabForm from "./LabForm";
+import LectureLabDetails from "./LectureLabDetails";
+import LectureForm from "./LectureForm";
+import SemForm from "./SemForm";
+export default function Day({day_name}){
+    const [btnMsg,setBtnMsg] = useState("Add Semester");
+    const [showLec,setLec] = useState(false);
+    const [sem,setSem] = useState({dept:"",sem:"",batch:""})
+    const[semesters,setSemesters] = useState([]);
+    const handleSem = (event)=>{
+        event.preventDefault();
+        setLec(!showLec);
+        if(btnMsg === "Close")setBtnMsg("Add Semester");
+        else setBtnMsg("Close");
+    }
+    const receiveDataFromChild=(sem)=>{
+        setSemesters(
+            [
+                ...semesters,
+                <SemRow key={sem.sem} sem={sem}/>
+            ]
+        );
+        setLec(false);
+        setBtnMsg("Add Semester")
+    }
     return(
       <div className={"day-outer"}>
           <div className={"day-name"}>
-              <label>Monday</label>
+              <label>{day_name}</label>
           </div>
           <div className={"day-sem"}>
-              <div>
-                  <SemRow/>
-              </div>
-              <div>
-                  <SemRow/>
-              </div>
-              <div>
-                  <SemRow/>
-              </div>
-              <div>
-                  <SemRow/>
-              </div>
+              {semesters.length >0 && semesters.map(
+                  (sem_component,index)=>sem_component
+              )}
+              <Button label={btnMsg} onclick={handleSem}/>
+          </div>
+          <div>
+              {showLec && <SemForm sendDataToParent={receiveDataFromChild} />}
           </div>
       </div>
     );

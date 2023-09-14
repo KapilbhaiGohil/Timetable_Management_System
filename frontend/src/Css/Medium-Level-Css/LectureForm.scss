@@ -2,7 +2,7 @@
 
 .dropdown-container{
   padding: 3rem;
-  width: 40%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -10,7 +10,6 @@
   border-radius: 3rem;
   background-color:#095077;
   .button-container{
-    width: 15rem;
     >button{
       padding: 1rem;
       background-color: rgba(0, 0, 0, 0.87);

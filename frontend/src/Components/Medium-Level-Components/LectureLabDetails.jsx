@@ -1,5 +1,5 @@
 import "../../Css/Medium-Level-Css/LectureLabDetails.scss"
-export default function LectureLabDetails(){
+export default function LectureLabDetails({data}){
     return(
       <div className={"lec-lab-outer"}>
           <div className={"lec-lab-time"}>
@@ -7,9 +7,9 @@ export default function LectureLabDetails(){
           </div>
           <hr/>
           <div className={"lec-lab-info"}>
-              <label>AT</label>
-              <label>SPS</label>
-              <label>Room 2</label>
+              <label>{data.sub}</label>
+              <label>{data.teacher}</label>
+              <label>{data.classroom}</label>
           </div>
       </div>
     );

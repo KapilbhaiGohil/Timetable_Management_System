@@ -21,11 +21,12 @@
     align-items: center;
   }
   .day-sem{
-      >div{
-        //border: 2px solid black;
-        //border-radius: 1rem;
-        margin: 1rem;
-        //width: 10vw;
-      }
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    >div{
+      margin: 1rem;
+    }
   }
 }
