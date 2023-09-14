@@ -35,7 +35,8 @@ export  default  function Login(){
                 // Navigate("/register");
             }
         }catch (e){
-            console.log(e);
+            window.alert(e.message);
+            // console.log(e);
         }
     }
     return (
@@ -57,8 +58,8 @@ export  default  function Login(){
                     </div>
                     <div className={"inputs-container"}>
                         <form onSubmit={handleSubmit}>
-                            <div><Input label={"E-mail"} name={"email"} onchange={handleEmail} type={"email"} icon={<AiOutlineMail size={"2rem"}  color={"#1976d2"}/>}/></div>
-                            <div><Input label={"Password"} name={"password"} onchange={handlePass} type={"password"} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
+                            <div><Input label={"E-mail"} name={"email"} onchange={handleEmail} type={"email"} icon={<AiOutlineMail size={"2rem"}  color={"#1976d2"}/>} required={true}/></div>
+                            <div><Input label={"Password"} name={"password"} onchange={handlePass} type={"password"} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>} required={true}/></div>
                             <div className={"btn-container"}><Button label={"Log in"} type={"submit"}/></div>
                         </form>
                     </div>

@@ -8,7 +8,6 @@ export default function LectureForm({batches}){
         <>
             <div className={"dropdown-container"}>
                 <h1>LECTURE DETAILS</h1>
-                <Dropdown label={"Select Batch"} options={['A','B']}/>
                 <Dropdown label={"Select Subject"} options={['WAD','AT','AA','OS','MFP']}/>
                 <Dropdown label={"Select Teacher"} options={['APV','AAA','JHB','SSS']}/>
                 <Dropdown label={"Select Classroom"} options={[0,1,2,3]}/>

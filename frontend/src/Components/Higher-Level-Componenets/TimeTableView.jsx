@@ -1,8 +1,8 @@
 import LabForm from "../Medium-Level-Components/LabForm";
 import LectureForm from "../Medium-Level-Components/LectureForm";
-import {type} from "@testing-library/user-event/dist/type";
 import SemRow from "../Medium-Level-Components/SemRow";
-
+import LectureLabDetails from "../Medium-Level-Components/LectureLabDetails";
+import Day from "../Medium-Level-Components/Day";
 export default function TimeTableView({total_semesters,odd}){
     const semesters =[];
     const lectures=[];
@@ -12,7 +12,7 @@ export default function TimeTableView({total_semesters,odd}){
             semesters.push(
                 <div key={i}>
                     semester {i+1}
-                    <SemRow lecture_details={<LectureForm batches={['A','B']}/>}/>
+                    {/*<SemRow lecture_details={<LectureForm batches={['A','B']}/>}/>*/}
                 </div>
             );
         }
@@ -22,12 +22,9 @@ export default function TimeTableView({total_semesters,odd}){
             <div>
                 hello this is day
             </div>
-            {/*<div>*/}
-            {/*    {semesters}*/}
-            {/*</div>*/}
-            {/*<LabForm/>*/}
-            <LabForm/>
-            <LectureForm/>
+            <Day/>
+            {/*<LectureLabDetails/>*/}
+            {/*<SemRow/>*/}
         </div>
     )
 }

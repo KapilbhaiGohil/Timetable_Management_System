@@ -1,0 +1,33 @@
+@import "../Higher-Level-Css/Colors";
+.sem-row-outer{
+  display: flex;
+  flex-direction: row;
+  .sem-row-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    color: $first;
+    background-color: $second;
+    width: 8.5vw;
+    height: 20vh;
+    padding: 1rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-radius: 1rem;
+    border: 2px solid black;
+    .sem-row-dept{
+
+    }
+    hr{
+      width: 100%;
+    }
+    .sem-row-sem{
+      width: 85%;
+      height: 85%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

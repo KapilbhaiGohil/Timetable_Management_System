@@ -33,7 +33,8 @@ export  default  function Register(){
                     window.alert(data.message);
                 }
             } catch (e) {
-                console.log(e);
+                window.alert(e.message);
+                // console.log(e);
             }
         }
     }
@@ -52,10 +53,10 @@ export  default  function Register(){
                 <div className={"form-container"}>
                     <form onSubmit={handleSubmit}>
                         <div className={"inputs-container"}>
-                            <div><Input label={"Name"} name={"name"} onchange={handleInputs} type={"text"} icon={<BsPerson size={"2rem"} color={"#1976d2"}/>}/></div>
-                            <div><Input label={"E-mail"} name={"email"} type={"email"} onchange={handleInputs} icon={<AiOutlineMail size={"2rem"} color={"#1976d2"}/>}/></div>
-                            <div><Input label={"Password"} name={"password"} type={"password"} onchange={handleInputs} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
-                            <div><Input label={"Confirm Password"} name={"cpassword"} type={"password"} onchange={handleInputs} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
+                            <div><Input required={true} label={"Name"} name={"name"} onchange={handleInputs} type={"text"} icon={<BsPerson size={"2rem"} color={"#1976d2"}/>}/></div>
+                            <div><Input required={true} label={"E-mail"} name={"email"} type={"email"} onchange={handleInputs} icon={<AiOutlineMail size={"2rem"} color={"#1976d2"}/>}/></div>
+                            <div><Input required={true} label={"Password"} name={"password"} type={"password"} onchange={handleInputs} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
+                            <div><Input required={true} label={"Confirm Password"} name={"cpassword"} type={"password"} onchange={handleInputs} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
                             <div className={"btn-container"}><Button label={"Register"} type={"submit"}/></div>
                         </div>
                     </form>

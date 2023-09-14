@@ -1,0 +1,31 @@
+@import "../Higher-Level-Css/Colors";
+
+.day-outer{
+  font-weight: 800;
+  color: $first;
+  background-color: $second;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 1rem;
+  .day-name{
+    border: 2px solid black;
+    border-radius: 1rem;
+    margin: 1rem;
+    align-self: stretch;
+    width: 10vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .day-sem{
+      >div{
+        //border: 2px solid black;
+        //border-radius: 1rem;
+        margin: 1rem;
+        //width: 10vw;
+      }
+  }
+}

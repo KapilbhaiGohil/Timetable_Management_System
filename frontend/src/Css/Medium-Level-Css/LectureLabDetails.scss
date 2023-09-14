@@ -1,0 +1,34 @@
+@import "../Higher-Level-Css/Colors";
+
+.lec-lab-outer{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 8.5vw;
+  height: 20vh;
+  color: $first;
+  background-color: $second;
+  border-radius: 1rem;
+  padding: 1rem;
+  font-weight: 500;
+  border: 2px solid black;
+  .lec-lab-time{
+    //color: black;
+  }
+  hr{
+    width: 100%;
+  }
+  .lec-lab-info{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 85%;
+    height: 85%;
+    >label{
+      padding: 0.18rem;
+    }
+  }
+}
