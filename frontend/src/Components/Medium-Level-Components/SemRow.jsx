@@ -25,14 +25,14 @@ export default function SemRow({sem}){
         console.log(lec_data)
         setLectures([
             ...lectures,
-            <LectureDetails key={v4()} lec_data={lec_data}/>
+            <LectureDetails  key={v4()} lec_data={lec_data}/>
         ]);
         // setShowLecForm(false);
     }
     const receiveDataFromLab = (lab_data)=>{
         console.log(lab_data)
-        setLectures([
-            ...lectures,
+        setLabs([
+            ...labs,
             <LabDetails key={v4()} lab_data={lab_data}/>
         ]);
         // setShowLecForm(false);
@@ -49,6 +49,7 @@ export default function SemRow({sem}){
                 </div>
             </div>
             {lectures.length>0 && lectures.map((lec)=>lec)}
+            {labs.length > 0 && labs.map((lab)=>lab)}
             <div>
                 <Button label={"Add Lab"} onclick={handleLabOnclick}/>
                 <Button label={"Add Lecture"} onclick={handleLecOnclick}/>

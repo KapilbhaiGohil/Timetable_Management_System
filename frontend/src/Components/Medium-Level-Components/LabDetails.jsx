@@ -1,5 +1,5 @@
 import "../../Css/Medium-Level-Css/LabDetails.scss"
-export default function LabDetails({lab_data}){
+export default function LabDetails({lab_data,onEdit,onDelete}){
     return(
         <div className={"lab-lab-outer"}>
             <div className={"lab-lab-time"}>
@@ -11,6 +11,10 @@ export default function LabDetails({lab_data}){
                 <label>{lab_data.sub} -</label>
                 <label>{lab_data.teacher} -</label>
                 <label>{lab_data.lab_no}</label>
+            </div>
+            <div className={"lab-lab-links"}>
+                <a onClick={onEdit}>Edit</a>
+                <a onClick={onDelete}>Delete</a>
             </div>
         </div>
     );

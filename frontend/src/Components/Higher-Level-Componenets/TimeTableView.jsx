@@ -1,20 +1,25 @@
-import LabForm from "../Medium-Level-Components/LabForm";
-import LectureForm from "../Medium-Level-Components/LectureForm";
-import SemRow from "../Medium-Level-Components/SemRow";
-import LectureDetails from "../Medium-Level-Components/LectureDetails";
+import "../../Css/Higher-Level-Css/TImeTableView.scss"
 import Day from "../Medium-Level-Components/Day";
+import {useState} from "react";
+import Button from "../Small-Level-Componenets/Button";
 export default function TimeTableView(){
-    const day = [];
+    const [days,setDays]=useState([]);
+    const [show,setShow] = useState(true);
     const week_days = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"];
-    for (let i = 0; i < 5; i++) {
-        day.push(<Day day_name={week_days[i]}/>)
+    const handleDay = (event)=>{
+        event.preventDefault();
+        setDays([
+            ...days,
+            <Day key={days.length} day_name={week_days[days.length]}/>
+        ]);
+        if(days.length===4){
+            setShow(false);
+        }
     }
     return(
-        <div>
-            <div>
-                hello this is day
-            </div>
-            <Day day_name={week_days[0]}/>
+        <div className={"time-table-outer"}>
+            {days.map((day)=>day)}
+            {show && <div className={"time-table-btn"}><Button onclick={handleDay} label={"Add Day"} /></div>}
         </div>
     )
 }

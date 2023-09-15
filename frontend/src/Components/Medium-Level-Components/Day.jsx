@@ -25,20 +25,27 @@ export default function Day({day_name}){
         setLec(false);
         setBtnMsg("Add Semester")
     }
+    const handleDay = (event)=>{
+        event.preventDefault();
+
+    }
     return(
-      <div className={"day-outer"}>
-          <div className={"day-name"}>
-              <label>{day_name}</label>
-          </div>
-          <div className={"day-sem"}>
-              {semesters.length >0 && semesters.map(
-                  (sem_component,index)=>sem_component
-              )}
-              <Button label={btnMsg} onclick={handleSem}/>
-          </div>
-          <div>
-              {showLec && <SemForm sendDataToParent={receiveDataFromChild} />}
-          </div>
-      </div>
+    <div className={"day"}>
+        <div className={"day-outer"}>
+            <div className={"day-name"}>
+                <label>{day_name}</label>
+            </div>
+            <div className={"day-sem"}>
+                {semesters.length >0 && semesters.map(
+                    (sem_component,index)=>sem_component
+                )}
+                <Button label={btnMsg} onclick={handleSem}/>
+            </div>
+            <div>
+                {showLec && <SemForm sendDataToParent={receiveDataFromChild} />}
+            </div>
+        </div>
+        <hr style={{width:"100%"}}/>
+    </div>
     );
 }

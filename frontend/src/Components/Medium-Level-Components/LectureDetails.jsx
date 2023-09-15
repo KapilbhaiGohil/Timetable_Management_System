@@ -1,5 +1,6 @@
 import "../../Css/Medium-Level-Css/LectureDetails.scss"
-export default function LectureDetails({lec_data}){
+export default function LectureDetails({lec_data,onEdit,onDelete}){
+
     return(
       <div className={"lec-lab-outer"}>
           <div className={"lec-lab-time"}>
@@ -10,6 +11,10 @@ export default function LectureDetails({lec_data}){
               <label>{lec_data.sub}</label>
               <label>{lec_data.teacher}</label>
               <label>Room {lec_data.classroom}</label>
+          </div>
+          <div className={"lec-lab-links"}>
+              <a onClick={onEdit}>Edit</a>
+              <a onClick={onDelete}>Delete</a>
           </div>
       </div>
     );

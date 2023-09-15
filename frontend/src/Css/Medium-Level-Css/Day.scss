@@ -1,32 +1,33 @@
 @import "../Higher-Level-Css/Colors";
-
-.day-outer{
-  font-weight: 800;
-  color: $first;
-  background-color: $second;
+.day{
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 1rem;
-  border-radius: 1rem;
-  .day-name{
-    border: 2px solid black;
-    border-radius: 1rem;
-    margin: 1rem;
-    align-self: stretch;
-    width: 10vw;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  .day-outer{
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: flex-start;
     align-items: center;
-  }
-  .day-sem{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    >div{
+    .day-name{
+      border: 2px solid black;
+      border-radius: 1rem;
       margin: 1rem;
+      align-self: stretch;
+      width: 10vw;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+    .day-sem{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      >div{
+        margin: 1rem;
+      }
     }
   }
 }
