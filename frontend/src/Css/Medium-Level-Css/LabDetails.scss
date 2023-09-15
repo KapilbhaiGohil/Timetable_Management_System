@@ -1,0 +1,33 @@
+@import "../Higher-Level-Css/Colors";
+.lab-lab-outer{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 13vw;
+  height: 20vh;
+  color: $first;
+  background-color: $second;
+  border-radius: 1rem;
+  padding: 1rem;
+  font-weight: 500;
+  border: 2px solid black;
+  .lab-lab-time{
+
+  }
+  >hr{
+    width: 100%;
+  }
+  .lab-lab-info{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    >label{
+      padding: 0.18rem;
+    }
+  }
+}

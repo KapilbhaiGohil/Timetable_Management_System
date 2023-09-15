@@ -2,9 +2,7 @@ import SemRow from "./SemRow";
 import "../../Css/Medium-Level-Css/Day.scss"
 import Button from "../Small-Level-Componenets/Button"
 import {useState} from "react";
-import LabForm from "./LabForm";
-import LectureLabDetails from "./LectureLabDetails";
-import LectureForm from "./LectureForm";
+import {v4} from "uuid";
 import SemForm from "./SemForm";
 export default function Day({day_name}){
     const [btnMsg,setBtnMsg] = useState("Add Semester");
@@ -21,7 +19,7 @@ export default function Day({day_name}){
         setSemesters(
             [
                 ...semesters,
-                <SemRow key={sem.sem} sem={sem}/>
+                <SemRow key={v4()} sem={sem}/>
             ]
         );
         setLec(false);

@@ -1,9 +1,11 @@
+import {v4} from "uuid";
 import "../../Css/Medium-Level-Css/SemRow.scss"
-import LectureLabDetails from "./LectureLabDetails";
+import LectureDetails from "./LectureDetails";
 import Button from "../Small-Level-Componenets/Button"
 import {useState} from "react";
 import LabForm from "./LabForm";
 import LectureForm from "./LectureForm";
+import LabDetails from "./LabDetails";
 export default function SemRow({sem}){
     const [lectures,setLectures] = useState([]);
     const [labs,setLabs] = useState([]);
@@ -19,14 +21,21 @@ export default function SemRow({sem}){
         setShowLecForm(!showLecForm);
         setShowLabForm(false);
     }
-    const handleLecArr=(event)=>{
-        event.preventDefault();
-        console.log(event.target)
-
+    const receiveDataFromLec = (lec_data)=>{
+        console.log(lec_data)
+        setLectures([
+            ...lectures,
+            <LectureDetails key={v4()} lec_data={lec_data}/>
+        ]);
+        // setShowLecForm(false);
     }
-    const handleLabArr =(event)=>{
-        event.preventDefault();
-        console.log(event.target)
+    const receiveDataFromLab = (lab_data)=>{
+        console.log(lab_data)
+        setLectures([
+            ...lectures,
+            <LabDetails key={v4()} lab_data={lab_data}/>
+        ]);
+        // setShowLecForm(false);
     }
     return(
         <div className={"sem-row-outer"}>
@@ -39,13 +48,14 @@ export default function SemRow({sem}){
                     <label>{sem.sem} - {sem.batch}</label>
                 </div>
             </div>
+            {lectures.length>0 && lectures.map((lec)=>lec)}
             <div>
                 <Button label={"Add Lab"} onclick={handleLabOnclick}/>
                 <Button label={"Add Lecture"} onclick={handleLecOnclick}/>
             </div>
-            {showLabForm && <LabForm  onSubmit={handleLabArr}/>}
-            {showLecForm && <LectureForm onSubmit={handleLecArr}/>}
-            {/*<LectureLabDetails/>*/}
+            {showLabForm && <LabForm sendDataToParent={receiveDataFromLab}/>}
+            {showLecForm && <LectureForm sendDataToParent={receiveDataFromLec}/>}
+            {/*<LectureDetails/>*/}
         </div>
     )
 }
