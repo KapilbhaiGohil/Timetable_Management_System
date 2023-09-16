@@ -18,6 +18,15 @@
     font-weight: 500;
     border-radius: 1rem;
     border: 2px solid black;
+    .sem-row-info-btn{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      >.button-container{
+        padding: 0;
+      }
+    }
     .sem-row-dept{
 
     }

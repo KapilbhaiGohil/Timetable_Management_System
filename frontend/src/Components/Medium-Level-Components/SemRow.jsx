@@ -47,13 +47,13 @@ export default function SemRow({sem}){
                 <div className={"sem-row-sem"}>
                     <label>{sem.sem} - {sem.batch}</label>
                 </div>
+                <div className={"sem-row-info-btn"}>
+                    <Button label={"Lab"} onclick={handleLabOnclick}/>
+                    <Button label={"Lecture"} onclick={handleLecOnclick}/>
+                </div>
             </div>
             {lectures.length>0 && lectures.map((lec)=>lec)}
             {labs.length > 0 && labs.map((lab)=>lab)}
-            <div>
-                <Button label={"Add Lab"} onclick={handleLabOnclick}/>
-                <Button label={"Add Lecture"} onclick={handleLecOnclick}/>
-            </div>
             {showLabForm && <LabForm sendDataToParent={receiveDataFromLab}/>}
             {showLecForm && <LectureForm sendDataToParent={receiveDataFromLec}/>}
             {/*<LectureDetails/>*/}

@@ -6,8 +6,8 @@ export default function Dropdown({name,label,options,onSelectionChange}){
                 <label>{label}</label>
             </div>
             <div className={'options-container'}>
-                <select name={name} defaultValue={"default"} onChange={onSelectionChange}>
-                    <option value={"default"} disabled={true}>--Select</option>
+                <select name={name}  onChange={onSelectionChange}  >
+                    <option value={""}>--Select</option>
                     {options && options.map(
                         (option)=><option key={option} value={option}>{option}</option>
                     )}

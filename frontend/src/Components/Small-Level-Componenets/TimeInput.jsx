@@ -7,11 +7,11 @@ export default function TimeInput({label,name,onChange}){
             <div className={"inner-container"}>
                 <div>
                     <label>From : </label>
-                    <input name={name+"from"} type={"text"} onChange={onChange} placeholder={"HH:MM"} pattern={"[0-9]{2}:[0-9]{2}"}/>
+                    <input required={true} name={name+"from"} type={"text"} onChange={onChange} placeholder={"HH:MM"} pattern={"[0-9]{2}:[0-9]{2}"}/>
                 </div>
                 <div>
                     <label>To : </label>
-                    <input name={name+"to"} type={"text"} onChange={onChange} placeholder={"HH:MM"} pattern={"[0-9]{2}:[0-9]{2}"}/>
+                    <input required={true} name={name+"to"} type={"text"} onChange={onChange} placeholder={"HH:MM"} pattern={"[0-9]{2}:[0-9]{2}"}/>
                 </div>
             </div>
         </div>
