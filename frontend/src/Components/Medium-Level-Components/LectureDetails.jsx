@@ -1,5 +1,4 @@
 import "../../Css/Medium-Level-Css/LectureDetails.scss"
-import {Link} from "react-router-dom";
 export default function LectureDetails({lec_data,onEdit,onDelete}){
     let a = lec_data.lecfrom.split(':');
     let b = lec_data.lecto.split(':');
@@ -31,10 +30,9 @@ export default function LectureDetails({lec_data,onEdit,onDelete}){
               <label>Room {lec_data.classroom}</label>
           </div>
           <div className={"lec-lab-links"} >
-              <Link onClick={onEdit} to={"from"}>Edit</Link>
-              <Link onClick={onDelete} to={"from"}>Delete</Link>
+              <button onClick={onEdit}>Edit</button>
+              <button onClick={onDelete}>Delete</button>
           </div>
-          {getWidth()}
       </div>
     );
 }

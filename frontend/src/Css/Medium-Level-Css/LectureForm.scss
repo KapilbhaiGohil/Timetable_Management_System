@@ -2,14 +2,15 @@
 
 .dropdown-container{
   padding: 3rem;
-  width: 100%;
+  width: 30vw;
+  height: 61vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 3rem;
   background-color:#095077;
-  z-index: 1;
+  //z-index: 1;
   .button-container{
     >button{
       padding: 1rem;

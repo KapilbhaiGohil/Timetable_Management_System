@@ -11,15 +11,10 @@ export default function SemRow({sem}){
     const [labs,setLabs] = useState([]);
     const [showLabForm,setShowLabForm] = useState(false);
     const [showLecForm,setShowLecForm] = useState(false);
-    const handleLabOnclick=(event)=>{
+    const [showForm,setShowForm] = useState(false);
+    const toggleForm=(event)=>{
         event.preventDefault();
-        setShowLabForm(!showLabForm);
-        setShowLecForm(false);
-    }
-    const handleLecOnclick=(event)=>{
-        event.preventDefault();
-        setShowLecForm(!showLecForm);
-        setShowLabForm(false);
+        setShowForm(!showForm);
     }
     const receiveDataFromLec = (lec_data)=>{
         console.log(lec_data)
@@ -27,7 +22,7 @@ export default function SemRow({sem}){
             ...lectures,
             <LectureDetails  key={v4()} lec_data={lec_data}/>
         ]);
-        // setShowLecForm(false);
+        setShowLecForm(false);
     }
     const receiveDataFromLab = (lab_data)=>{
         console.log(lab_data)
@@ -35,28 +30,34 @@ export default function SemRow({sem}){
             ...labs,
             <LabDetails key={v4()} lab_data={lab_data}/>
         ]);
-        // setShowLecForm(false);
+        setShowLabForm(false);
     }
     return(
-        <div className={"sem-row-outer"}>
-            <div className={"sem-row-info"}>
-                <div className={"sem-row-dept"}>
-                    <label>{sem.dept}</label>
+        <div className={"sem-row"}>
+            {showForm && <div className={"sem-row-forms"}>
+                <div className={"sem-row-forms-div"}>
+                     <LabForm sendDataToParent={receiveDataFromLab}/>
                 </div>
-                <hr/>
-                <div className={"sem-row-sem"}>
-                    <label>{sem.sem} - {sem.batch}</label>
+                <div className={"sem-row-forms-div"}>
+                    <LectureForm sendDataToParent={receiveDataFromLec}/>
                 </div>
-                <div className={"sem-row-info-btn"}>
-                    <Button label={"Lab"} onclick={handleLabOnclick}/>
-                    <Button label={"Lecture"} onclick={handleLecOnclick}/>
+            </div>}
+            <div className={"sem-row-outer"}>
+                <div className={"sem-row-info"}>
+                    <div className={"sem-row-dept"}>
+                        <label>{sem.dept}</label>
+                    </div>
+                    <hr/>
+                    <div className={"sem-row-sem"}>
+                        <label>{sem.sem} - {sem.batch}</label>
+                    </div>
+                    <div className={"sem-row-info-btn"}>
+                        <Button label={"Show Forms"} onclick={toggleForm}/>
+                    </div>
                 </div>
+                {lectures.length>0 && lectures.map((lec)=>lec)}
+                {labs.length > 0 && labs.map((lab)=>lab)}
             </div>
-            {lectures.length>0 && lectures.map((lec)=>lec)}
-            {labs.length > 0 && labs.map((lab)=>lab)}
-            {showLabForm && <LabForm sendDataToParent={receiveDataFromLab}/>}
-            {showLecForm && <LectureForm sendDataToParent={receiveDataFromLec}/>}
-            {/*<LectureDetails/>*/}
         </div>
     )
 }

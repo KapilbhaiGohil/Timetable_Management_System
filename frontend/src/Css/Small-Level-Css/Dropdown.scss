@@ -1,7 +1,6 @@
 @import "../Higher-Level-Css/Colors";
 
 .outer-container{
-  //z-index: 1;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -9,8 +8,8 @@
   align-items: center;
   color: $first;
   font:1rem $text1;
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
   margin:0.8rem;
   .label-container{
 

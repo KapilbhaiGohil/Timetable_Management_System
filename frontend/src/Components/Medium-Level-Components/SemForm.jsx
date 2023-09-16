@@ -18,7 +18,7 @@ export default function SemForm({sendDataToParent}){
     }
     return(
         <>
-            <div className={"dropdown-container"}>
+            <div className={"sem-dropdown-container"}>
                 <h1>SEMESTER DETAILS</h1>
                 <form className={"sem-form-form"} onSubmit={handleSubmit}>
                     <Dropdown name={"dept"} label={"Select Department"} onSelectionChange={handleSelectionChange} options={['CE','IT','CHEMICAL','ICT']}/>

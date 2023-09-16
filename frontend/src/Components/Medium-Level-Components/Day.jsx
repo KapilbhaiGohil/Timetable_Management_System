@@ -4,10 +4,12 @@ import Button from "../Small-Level-Componenets/Button"
 import {useState} from "react";
 import {v4} from "uuid";
 import SemForm from "./SemForm";
+import LabDetails from "./LabDetails";
+import LabForm from "./LabForm";
+import {Link} from "react-router-dom";
 export default function Day({day_name}){
     const [btnMsg,setBtnMsg] = useState("Add Semester");
     const [showLec,setLec] = useState(false);
-    const [sem,setSem] = useState({dept:"",sem:"",batch:""})
     const[semesters,setSemesters] = useState([]);
     const handleSem = (event)=>{
         event.preventDefault();
@@ -27,7 +29,6 @@ export default function Day({day_name}){
     }
     const handleDay = (event)=>{
         event.preventDefault();
-
     }
     return(
     <div className={"day"}>
