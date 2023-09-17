@@ -14,7 +14,6 @@ export default function LabForm({onClick,sendDataToParent}){
     }
     const handleSubmit=(event)=>{
         event.preventDefault();
-        // console.log(lab);
         sendDataToParent(lab);
     }
     return(
@@ -27,7 +26,7 @@ export default function LabForm({onClick,sendDataToParent}){
                     <Dropdown name={"teacher"} onSelectionChange={handleSelectionChange} label={"Select Teacher"} options={['APV','AAA','JHB','SSS']}/>
                     <Dropdown name={"lab_no"} onSelectionChange={handleSelectionChange} label={"Select Lab"} options={[0,1,2,3]}/>
                     <TimeInput name={"lab"} onChange={handleSelectionChange} label={"Selet Duration"}/>
-                    <Button label={"Add Lab"}/>
+                    <Button type={"submit"} label={"Add Lab"}/>
                 </form>
             </div>
         </>

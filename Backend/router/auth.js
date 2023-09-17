@@ -2,7 +2,6 @@ const express = require('express');
 const User = require('../models/userSchema');
 const bcrypt = require('bcrypt')
 const router = express.Router()
-const authenticateJWT = require("../middleware/authenticate")
 router.use(express.json())
 //login
 router.post('/login',async(req,res)=>{
@@ -18,7 +17,6 @@ router.post('/login',async(req,res)=>{
         res.cookie("jwtoken",jwtoken,{expires:new Date(Date.now() + (15*24 * 60 * 60 * 1000)),httpOnly:true})//15 days store the cookie
         return res.status(201).send({"message":"successfull login"})
     }catch(e){
-        console.log(e)
         return  res.status(500).send({"message":"internal server error"})
     }
 });

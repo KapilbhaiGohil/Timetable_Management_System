@@ -1,5 +1,5 @@
 import "../../Css/Small-Level-Css/Input.scss"
-export  default  function Input({label,type,name = false,icon,onchange}){
+export  default  function Input({label,type,name,icon,onchange}){
     return(
         <div className={"input-container"}>
             <div className={"label-field"}>

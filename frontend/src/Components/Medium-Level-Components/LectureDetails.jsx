@@ -1,13 +1,11 @@
 import "../../Css/Medium-Level-Css/LectureDetails.scss"
-export default function LectureDetails({lec_data,onEdit,onDelete}){
+export default function LectureDetails({lec_data,onEdit,onDelete,index}){
     let a = lec_data.lecfrom.split(':');
     let b = lec_data.lecto.split(':');
     let minutes1 = (+a[0]) * 60 + (+a[1]);
     let minutes2 = (+b[0]) * 60  +(+b[1]);
     let defalutMinutes = (8)*60+(30);
     const getWidth=()=>{
-        console.log(minutes1)
-        console.log(minutes2)
         if(minutes2<minutes1){
             minutes2 = (+b[0]+12) * 60  +(+b[1]);
         }
@@ -21,7 +19,7 @@ export default function LectureDetails({lec_data,onEdit,onDelete}){
     return(
       <div className={"lec-lab-outer"} style={{width:`${getWidth()}vw`,position:"absolute",marginLeft:`${getPostion()}vw`}}>
           <div className={"lec-lab-time"}>
-                <label>{lec_data.lecfrom} : {lec_data.lecto}</label>
+                <label>{lec_data.lecfrom}-{lec_data.lecto}</label>
           </div>
           <hr/>
           <div className={"lec-lab-info"}>
@@ -30,7 +28,6 @@ export default function LectureDetails({lec_data,onEdit,onDelete}){
               <label>Room {lec_data.classroom}</label>
           </div>
           <div className={"lec-lab-links"} >
-              <button onClick={onEdit}>Edit</button>
               <button onClick={onDelete}>Delete</button>
           </div>
       </div>

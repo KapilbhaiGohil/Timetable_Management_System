@@ -1,13 +1,12 @@
 import "../../Css/Medium-Level-Css/LabDetails.scss"
-export default function LabDetails({lab_data,onEdit,onDelete}){
+import {v4} from "uuid";
+export default function LabDetails({lab_data,onEdit,onDelete,innerLabs,onRemove}){
     let a = lab_data.labfrom.split(':');
     let b = lab_data.labto.split(':');
     let minutes1 = (+a[0]) * 60 + (+a[1]);
     let minutes2 = (+b[0]) * 60  +(+b[1]);
     let defalutMinutes = (8)*60+(30);
     const getWidth=()=>{
-        // console.log(minutes1)
-        // console.log(minutes2)
         if(minutes2<minutes1){
             minutes2 = (+b[0]+12) * 60  +(+b[1]);
         }
@@ -25,14 +24,11 @@ export default function LabDetails({lab_data,onEdit,onDelete}){
             </div>
             <hr/>
             <div className={"lab-lab-info"}>
-                <label>{lab_data.sub_batch} - </label>
-                <label>{lab_data.sub} -</label>
-                <label>{lab_data.teacher} -</label>
-                <label>{lab_data.lab_no}</label>
+                {innerLabs.map((lab)=><label key={v4()}>{lab.sub_batch} - {lab.sub} - {lab.teacher} - {lab.lab_no}</label>)}
             </div>
             <div className={"lab-lab-links"}>
-                <button onClick={onEdit}>Edit</button>
                 <button onClick={onDelete}>Delete</button>
+                <button onClick={onRemove}>Remove</button>
             </div>
         </div>
     );

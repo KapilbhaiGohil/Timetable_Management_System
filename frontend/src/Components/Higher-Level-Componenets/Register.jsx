@@ -17,7 +17,7 @@ export  default  function Register(){
             window.alert("Password and confirm password didn't match")
         }else {
             try {
-                const res = await fetch("/register", {
+                const res = await fetch("auth/register", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -34,7 +34,6 @@ export  default  function Register(){
                 }
             } catch (e) {
                 window.alert(e.message);
-                // console.log(e);
             }
         }
     }

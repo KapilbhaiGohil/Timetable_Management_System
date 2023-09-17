@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../Assets/logo.png"
 import "../../Css/Medium-Level-Css/Navbar.scss"
-function Navbar() {
+function Navbar({navData}) {
 
     return (
         <nav className={"Navbar"}>
@@ -11,11 +11,7 @@ function Navbar() {
                 <h1>TimePlanner Plus</h1>
             </div>
             <main>
-                <Link to={"/"}>Home</Link>
-                <Link to={"/about"}>About Us</Link>
-                <Link to={"/contact"}>Contact Us</Link>
-                <Link to={"/login"}>Login</Link>
-                <Link to={"/register"}>Register</Link>
+                {navData.map((nav)=><Link to={nav.to}>{nav.name}</Link>)}
             </main>
         </nav>
     );

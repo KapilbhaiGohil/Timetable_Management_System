@@ -31,12 +31,24 @@
       padding: 0.18rem;
     }
   }
-  .lec-lab-links{
-    cursor: pointer;
+  .lec-lab-links {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     width: 100%;
-    justify-content: space-between;
-    color: blue;
+    height: 40%;
+    > button {
+      cursor: pointer;
+      width: 50%;
+      outline: none;
+      text-decoration: none;
+      border: none;
+      background-color: #1f262e;
+      color: $first;
+      border-radius: 0.3rem;
+      text-transform: uppercase;
+      font-size: 0.6rem;
+      font-weight: 500;
+    }
   }
 }
