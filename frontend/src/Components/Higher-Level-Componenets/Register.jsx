@@ -25,7 +25,7 @@ export  default  function Register(){
                     body: JSON.stringify({name: name, email: email, password: password})
                 });
                 const data = await res.json();
-                console.log(data);
+                // console.log(data);
                 if(res.status===201){
                     window.alert("data saved succesfully");
                     Navigate("/login");

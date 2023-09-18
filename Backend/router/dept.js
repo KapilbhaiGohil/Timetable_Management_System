@@ -26,4 +26,13 @@ deptRouter.post('/getdept',async(req,res)=>{
         return res.status(500).send({message:"Internal server error"})
     }
 })
+deptRouter.post('/getAllDept',async(req,res)=>{
+    try{
+        const data = await Dept.find({});
+        if(!data)return res.status(404).send({messange:"No departetns found"});
+        return res.status(200).json(data);
+    }catch(e){
+        return res.status(500).send({message:"Internal Server Error"})
+    }
+})
 module.exports = deptRouter

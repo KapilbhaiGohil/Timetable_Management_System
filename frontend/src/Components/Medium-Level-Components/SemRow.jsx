@@ -7,6 +7,7 @@ import LabForm from "./LabForm";
 import LectureForm from "./LectureForm";
 import LabDetails from "./LabDetails";
 export default function SemRow({sem}){
+    console.log("semRow received object",sem)
     const [lectures,setLectures] = useState([]);
     const [labs,setLabs] = useState([]);
     const [showForm,setShowForm] = useState(false);
@@ -88,11 +89,11 @@ export default function SemRow({sem}){
             <div className={"sem-row-outer"}>
                 <div className={"sem-row-info"}>
                     <div className={"sem-row-dept"}>
-                        <label>{sem.dept}</label>
+                        <label>{sem.dept.code}</label>
                     </div>
                     <hr/>
                     <div className={"sem-row-sem"}>
-                        <label>{sem.sem} - {sem.batch}</label>
+                        <label>{sem.sem.semNo} - {sem.batch.batchName}</label>
                     </div>
                     <div className={"sem-row-info-btn"}>
                         <Button label={"Save"} onclick={toggleForm}/>

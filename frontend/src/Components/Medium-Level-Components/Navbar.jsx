@@ -11,7 +11,7 @@ function Navbar({navData}) {
                 <h1>TimePlanner Plus</h1>
             </div>
             <main>
-                {navData.map((nav)=><Link to={nav.to}>{nav.name}</Link>)}
+                {navData.map((nav,index)=><Link key={index} to={nav.to}>{nav.name}</Link>)}
             </main>
         </nav>
     );

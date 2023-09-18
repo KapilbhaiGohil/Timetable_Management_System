@@ -11,6 +11,7 @@ const batchRouter = require('./router/batch')
 const teacherRouter = require('./router/teacher')
 const labRouter = require('./router/Lab')
 const classRouter = require('./router/Class')
+const customRouter = require('./router/CustumeQuery')
 
 connectDB(true)
 
@@ -22,6 +23,7 @@ app.use('/batch',batchRouter)
 app.use('/teacher',teacherRouter)
 app.use('/lab',labRouter)
 app.use('/class',classRouter)
+app.use('/custom',customRouter)
 app.listen(process.env.PORT,()=>{
     console.log("Server started at port : "+process.env.PORT)
 })

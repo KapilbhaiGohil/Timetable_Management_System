@@ -19,5 +19,25 @@ semRouter.post('/add',async (req,res)=>{
         return res.status(400).send({message:"Internal server error"})
     }
 })
-
+semRouter.post("/getAllSem",async(req,res)=>{
+    try{
+        const allsem = await Sem.find({});
+        if(allsem.length>0)return res.status(200).json(allsem);
+        return res.status(404).send("No semesters are added to database")
+    }catch(e){
+        return res.status(500).send({message:"Internal Server Error"});
+    }
+})
+semRouter.post("/getSemByDept",async(req,res)=>{
+    try{
+        const {deptCode} = req.body;
+        const dept = await Dept.findOne({'code':deptCode});
+        console.log(dept.code);
+        const allsem = await Sem.find({'deptId':dept._id});
+        if(allsem.length>0)return res.status(200).json(allsem);
+        return res.status(404).send("No semesters are added to database")
+    }catch(e){
+        return res.status(500).send({message:"Internal Server Error"});
+    }
+})
 module.exports = semRouter;
