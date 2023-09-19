@@ -23,7 +23,6 @@ export default function LectureForm({sendDataToParent,allDataInfo}){
             lecfrom:lec.lecfrom,
             lecto:lec.lecto
         }
-        console.log("final lecture obj : ",obj);
         sendDataToParent(obj);
     }
     return(

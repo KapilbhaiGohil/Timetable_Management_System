@@ -5,57 +5,65 @@ import {useEffect, useState} from "react";
 import {v4} from "uuid";
 import SemForm from "./SemForm";
 
-export default function Day({day_name,sendDataToParent}){
+export default function Day({day_name,sendDataToParent,timeTableData}){
     const [btnMsg,setBtnMsg] = useState("Add Semester");
     const [showLec,setLec] = useState(false);
-    const [semDeptBatchArr,setSemDeptBatchArr]=useState([])
+    const [semDeptBatchArr,setSemDeptBatchArr]=useState([]);
     const [semRowsInfo,setSemRowsInfo]=useState([]);
+    useEffect(() => {
+        if(timeTableData){
+            console.log("received time table data")
+            console.log(timeTableData)
+            if(timeTableData.semRowsInfo)setSemRowsInfo(timeTableData.semRowsInfo);
+            if(timeTableData.semDeptBatchArr)setSemDeptBatchArr(timeTableData.semDeptBatchArr);
+        }
+    }, []);
+    useEffect(() => {
+        console.log("semRowInfo Data")
+        console.log(semRowsInfo);
+    }, [semRowsInfo]);
+    console.log(day_name)
+    useEffect(() => {
+        console.log("semDeptBatchArr Data")
+        console.log(semDeptBatchArr);
+    }, [semDeptBatchArr]);
+
     const handleSem = (event)=>{
         event.preventDefault();
         setLec(!showLec);
         if(btnMsg === "Close")setBtnMsg("Add Semester");
         else setBtnMsg("Close");
     }
-    const receiveDataFromSemForm=(sem,semDeptBatch)=>{
-        console.log("from day.jsx line 20 semDeptBatch",semDeptBatch)
-        const updateArr = [...semDeptBatchArr]
-        updateArr.push(semDeptBatch)
-        setSemDeptBatchArr(updateArr)
+    const receiveDataFromSemForm=(semDeptBatch)=>{
+        const ind = semDeptBatchArr.findIndex((arr)=>(
+            arr.batch._id === semDeptBatch.batch._id &&
+            arr.dept._id === semDeptBatch.dept._id &&
+            arr.sem._id === semDeptBatch.sem._id
+        ))
+        if(ind !== -1){
+            const updateArr = [...semDeptBatchArr];
+            updateArr[ind] = semDeptBatch;
+            setSemDeptBatchArr(updateArr);
+        }else{
+            const updateArr = [...semDeptBatchArr]
+            updateArr.push(semDeptBatch)
+            setSemDeptBatchArr(updateArr)
+        }
         setLec(false);
         setBtnMsg("Add Semester")
     }
-    useEffect(()=>{
-        console.log("This is sem dept batch arr",semDeptBatchArr)
-    },[semDeptBatchArr])
     const handleDay = (event)=>{
         event.preventDefault();
     }
-    const receiveDataFromSemRow=(dataObj)=>{
-        const ind = semRowsInfo.findIndex(
-            (sem)=>sem.sdb.batch._id===dataObj.sdb.batch._id &&
-                sem.sdb.dept._id===dataObj.sdb.dept._id &&
-                sem.sdb.sem._id===dataObj.sdb.sem._id
-        )
-        console.log("Index is ",ind)
-        if(ind===-1){
-            setSemRowsInfo([
-                ...semRowsInfo,
-                dataObj
-            ])
-        }else{
-            setSemRowsInfo((prevState)=>{
-                const updatedSemRow = [...prevState];
-                updatedSemRow[ind]=dataObj;
-                return updatedSemRow;
-            })
-        }
+    const receiveDataFromSemRow=(index,dataObj,sem)=>{
+        const updateSemRow = [...semRowsInfo];
+        updateSemRow[index] = {dataObj,sem};
+        setSemRowsInfo(updateSemRow);
     }
-    useEffect(() => {
-        console.log("THIS IS THE ROW INFOS OBJECT",semRowsInfo)
-    }, [semRowsInfo]);
     const handleSave=(event)=>{
         event.preventDefault();
-        sendDataToParent({day_name,semRowsInfo})
+        console.log("hello world")
+        sendDataToParent({day:day_name,semRowsInfo,semDeptBatchArr});
     }
     return(
     <div className={"day"}>
@@ -63,12 +71,12 @@ export default function Day({day_name,sendDataToParent}){
             <div className={"day-name"}>
                 <label>{day_name}</label>
                 <div>
-                    <Button label={"Save"} onclick={handleSave}/>
+                    <Button label={"Save"} onclick={handleSave} />
                 </div>
             </div>
             <div className={"day-sem"}>
-                {semDeptBatchArr.length>0 && semDeptBatchArr.map(
-                    (sdp,index)=><SemRow prevSavedData={semRowsInfo[index]} sendRowInfoToParent={receiveDataFromSemRow} key={v4()} sem={sdp}/>
+                {semDeptBatchArr && semDeptBatchArr.length>0 && semDeptBatchArr.map(
+                    (sdp,index)=><SemRow  sendDataToDay={(newdata)=>receiveDataFromSemRow(index,newdata,sdp)} semRowInfo={semRowsInfo[index]} key={v4()} sem={sdp}/>
                 )}
                 <Button label={btnMsg} onclick={handleSem}/>
             </div>

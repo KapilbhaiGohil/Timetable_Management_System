@@ -28,43 +28,39 @@ const fetchAllDataInfo=async(semId,deptId,setAllDataInfo,batch)=>{
         console.log(e);
     }
 }
-export default function SemRow({sem,sendRowInfoToParent,prevSavedData}){
-    console.log("semRow received object",sem)
+export default function SemRow({sem,sendDataToDay,semRowInfo}){
     const [showForm,setShowForm] = useState(false);
     const [allDataInfo,setAllDataInfo] = useState();
     const [labsInfo,setLabsInfo]=useState([]);
     const [lecInfo,setLecInfo]=useState([]);
-    console.log("received presaved data",prevSavedData);
     useEffect(() => {
-        if(prevSavedData !== undefined){
-            setLabsInfo(prevSavedData.labsInfo);
-            setLecInfo(prevSavedData.lecInfo);
+        if(semRowInfo!==undefined){
+            setLabsInfo(semRowInfo.dataObj.labsInfo)
+            setLecInfo(semRowInfo.dataObj.lecInfo);
+            sem = semRowInfo.dataObj.sem;
         }
-    }, [prevSavedData]);
+    }, []);
+    useEffect(() => {
+        console.log("Lecture info")
+        console.log(lecInfo)
+    }, [lecInfo]);
+    useEffect(() => {
+        console.log("labs info")
+        console.log(labsInfo)
+    }, [labsInfo]);
     const toggleForm=(event)=>{
         event.preventDefault();
         setShowForm(!showForm);
     }
-    const receiveDataFromLec = (lec_data)=>{
-        setLecInfo([
-            ...lecInfo,
-            {data:lec_data}
-        ]);
-    }
     useEffect(() => {
         const semId = sem.sem._id;
         const deptId = sem.dept._id;
-        console.log(semId,deptId)
         fetchAllDataInfo(semId,deptId,setAllDataInfo,sem.batch);
     }, []);
-    useEffect(() => {
-        console.log("this is all data info object",allDataInfo)
-    }, [allDataInfo]);
     const receiveDataFromLab = (lab_data) => {
         const ind = labsInfo.findIndex((lab)=>lab.labfrom===lab_data.labfrom && lab.labto===lab_data.labto);
         if (ind !== -1) {
             const updatedInnerLabs = [...labsInfo[ind].labs, lab_data];
-            // console.log("updated Inner labs ",updatedInnerLabs)
             setLabsInfo((prevState)=> {
                 const updatedLabInfo = [...prevState];
                 updatedLabInfo[ind].labs = updatedInnerLabs;
@@ -81,18 +77,12 @@ export default function SemRow({sem,sendRowInfoToParent,prevSavedData}){
             ])
         }
     };
-    useEffect(() => {
-        console.log("this is a lab info object",labsInfo)
-    }, [labsInfo]);
     const handleLabRemove=(labFrom,labTo)=>{
         const updatedLabs = [...labsInfo];
         const index = updatedLabs.findIndex((lab)=>lab.labfrom===labFrom && lab.labto===labTo);
-        // console.log(index);
         if(updatedLabs[index] && updatedLabs[index].labs){
             updatedLabs[index].labs.pop();
         }
-        // console.log(index);
-        // console.log(updatedLabs[index].labs.length)
         if(updatedLabs[index].labs.length===0){
             const finalLabs = labsInfo.filter((lab)=>(lab.labfrom!==labFrom || lab.labto!==labTo));
             setLabsInfo(finalLabs);
@@ -106,6 +96,12 @@ export default function SemRow({sem,sendRowInfoToParent,prevSavedData}){
         updatedLab.splice(index,1);
         setLabsInfo(updatedLab);
     }
+    const receiveDataFromLec = (lec_data)=>{
+        setLecInfo([
+            ...lecInfo,
+            {data:lec_data}
+        ]);
+    }
     const handleLecDelete=(lecFrom,lecTo)=>{
         const index = lecInfo.findIndex((lec)=>(lec.data.lecfrom===lecFrom && lec.data.lecto===lecTo));
         const updatedLec = lecInfo.filter((lec,ind)=>ind!==index);
@@ -113,8 +109,11 @@ export default function SemRow({sem,sendRowInfoToParent,prevSavedData}){
     }
     const handleSaveSemRow=(event)=>{
         event.preventDefault();
-        sendRowInfoToParent({labsInfo,lecInfo,sdb:sem});
+        sendDataToDay({labsInfo,lecInfo,sem});
     }
+    // useEffect(() => {
+    //     sendDataToDay({labsInfo,lecInfo,sem})
+    // }, [sendDataToDay]);
     return(
         <div className={"sem-row"}>
             {showForm && <div className={"sem-row-forms"}>

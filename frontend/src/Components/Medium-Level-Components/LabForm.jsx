@@ -23,7 +23,6 @@ export default function LabForm({sendDataToParent,allDataInfo}){
             labfrom:lab.labfrom,
             labto:lab.labto
         }
-        console.log("This is labform final object : ",obj);
         sendDataToParent(obj);
     }
     return(

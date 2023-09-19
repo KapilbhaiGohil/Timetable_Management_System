@@ -8,8 +8,9 @@
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
+  height: 100vh;
   .time-table-btn{
     width: 12%;
     .button-container{

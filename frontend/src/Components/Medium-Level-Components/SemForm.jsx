@@ -90,7 +90,7 @@ export default function SemForm ({sendDataToParent}){
             batch:batchOptions.find((batch)=>batch.batchName===event.target.batch.value),
             sem: semOptions.find((sem)=>sem.semNo===parseInt(event.target.sem.value))
         }
-        sendDataToParent(sem,obj);
+        sendDataToParent(obj);
     }
     useEffect(()=>{
         fetchDept(setDeptOptions).catch((e)=>window.alert(e));

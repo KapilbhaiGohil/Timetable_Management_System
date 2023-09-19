@@ -1,44 +1,49 @@
 import "../../Css/Higher-Level-Css/TImeTableView.scss"
 import Day from "../Medium-Level-Components/Day";
 import {useEffect, useState} from "react";
+import {v4} from "uuid";
 import Button from "../Small-Level-Componenets/Button";
 export default function TimeTableView(){
-    const [days,setDays]=useState([]);
     const [show,setShow] = useState(true);
     const week_days = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"];
     const [dayInfo,setDayInfo] = useState([]);
-    const receiveDataFromDay=(dayObj)=>{
-        const ind = dayInfo.findIndex((d)=>d.day_name===dayObj.day_name);
-        if(ind!==-1){
-            setDayInfo((prevState)=>{
-                const updatedDay = [...prevState];
-                updatedDay[ind]=dayObj;
-                return updatedDay;
-            })
-        }else{
-            setDayInfo([
-                ...dayInfo,
-                dayObj
-            ])
-        }
+    const [timeTableData,setTimeTableData] = useState([]);
+    const receiveDataFromDay=(data)=>{
+        console.log("heo fksldjflkj",data)
+        const ind = timeTableData.findIndex((t)=>t.day===data.day);
+        console.log(ind)
+            if(ind!==-1){
+                setTimeTableData((prevState)=>{
+                    const updatedTimeTableData = [...prevState];
+                    updatedTimeTableData[ind]=data;
+                    return updatedTimeTableData;
+                });
+            }else{
+                setTimeTableData([
+                    ...timeTableData,
+                   data
+                ]);
+            }
     }
     useEffect(() => {
-        console.log("Day info",dayInfo)
-    }, [dayInfo]);
+        console.log("timetable daata info")
+        console.log(timeTableData)
+    }, [timeTableData]);
     const handleDay = (event)=>{
         event.preventDefault();
-        setDays([
-            ...days,
-            <Day key={days.length} sendDataToParent={receiveDataFromDay} day_name={week_days[days.length]}/>
-        ]);
-        if(days.length===4){
-            setShow(false);
-        }
+        setTimeTableData([
+            ...timeTableData,
+            {day:week_days[timeTableData.length]}
+        ])
     }
     return(
         <div className={"time-table-outer"}>
-            {days.map((day)=>day)}
-            {show && <div className={"time-table-btn"}><Button onclick={handleDay} label={"Add Day"} /></div>}
+            {timeTableData.map((data,index)=>(<Day key={v4()} timeTableData={timeTableData[index]} day_name={data.day} sendDataToParent={receiveDataFromDay}/>))}
+            {show && (
+                <div className={"time-table-btn"}>
+                    <Button onclick={handleDay} label={"Add Day"} />
+                </div>
+            )}
         </div>
     )
 }

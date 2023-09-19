@@ -1,7 +1,6 @@
 import "../../Css/Medium-Level-Css/LabDetails.scss"
 import {v4} from "uuid";
 export default function LabDetails({lab_data,onEdit,onDelete,innerLabs,onRemove}){
-    console.log("received inner labas",innerLabs)
     let a = lab_data.labfrom.split(':');
     let b = lab_data.labto.split(':');
     let minutes1 = (+a[0]) * 60 + (+a[1]);
