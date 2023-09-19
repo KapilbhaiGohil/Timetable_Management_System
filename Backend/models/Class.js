@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const classSchema = new mongoose.Schema(
     {
-        classes:[{type:Number,required:true}],
+        classroom:{type:Number,required:true},
         deptId:{type:mongoose.Schema.Types.ObjectId,ref:'Department',required:true}
     },
     {

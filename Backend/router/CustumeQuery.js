@@ -34,4 +34,22 @@ customRouter.post('/getBatchBySem',async(req,res)=>{
         return res.status(500).send({message:"Internal server error"+e.message})
     }
 })
+
+customRouter.post('/getAllDataInfo',async(req,res)=>{
+    try {
+        const {semId,deptId}=req.body;
+        if(!semId || !deptId)return res.status(422).send({message:"semId and deptId both required"});
+        //subject,teacher,classroom,lab
+        const subjects = await Subject.find({semId});
+        const teachers = await Teacher.find({deptId});
+        const classrooms = await Class.find({deptId});
+        const labs = await Lab.find({deptId});
+        if(subjects.length===0 || teachers.length === 0 || classrooms.length === 0||labs.length===0){
+            return res.status(404).send({message:"Some data missing"});
+        }
+        return res.status(200).json({subjects,teachers,classrooms,labs})
+    }catch (e) {
+        return res.status(500).send({message:"Internal server error "+e.message})
+    }
+})
 module.exports = customRouter;

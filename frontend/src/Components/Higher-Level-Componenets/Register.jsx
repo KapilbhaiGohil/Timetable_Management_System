@@ -26,7 +26,7 @@ export  default  function Register(){
                 });
                 const data = await res.json();
                 // console.log(data);
-                if(res.status===201){
+                if(res.ok){
                     window.alert("data saved succesfully");
                     Navigate("/login");
                 }else{

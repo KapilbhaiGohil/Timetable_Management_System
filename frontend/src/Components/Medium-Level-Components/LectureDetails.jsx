@@ -1,5 +1,5 @@
 import "../../Css/Medium-Level-Css/LectureDetails.scss"
-export default function LectureDetails({lec_data,onEdit,onDelete,index}){
+export default function LectureDetails({lec_data,onDelete}){
     let a = lec_data.lecfrom.split(':');
     let b = lec_data.lecto.split(':');
     let minutes1 = (+a[0]) * 60 + (+a[1]);
@@ -23,9 +23,9 @@ export default function LectureDetails({lec_data,onEdit,onDelete,index}){
           </div>
           <hr/>
           <div className={"lec-lab-info"}>
-              <label>{lec_data.sub}</label>
-              <label>{lec_data.teacher}</label>
-              <label>Room {lec_data.classroom}</label>
+              <label>{lec_data.sub.subCode}</label>
+              <label>{lec_data.teacher.shortName}</label>
+              <label>Room {lec_data.classroom.classroom}</label>
           </div>
           <div className={"lec-lab-links"} >
               <button onClick={onDelete}>Delete</button>
