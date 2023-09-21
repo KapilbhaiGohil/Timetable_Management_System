@@ -6,8 +6,12 @@ import Button from "../Small-Level-Componenets/Button";
 export default function TimeTableView(){
     const [show,setShow] = useState(true);
     const week_days = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"];
-    const [dayInfo,setDayInfo] = useState([]);
     const [timeTableData,setTimeTableData] = useState([]);
+    const [timeTableInfo,setTimeTableInfo] = useState([]);
+    useEffect(() => {
+        console.log("This is final time table info ------------------------------------");
+        console.log(timeTableInfo);
+    }, [timeTableInfo]);
     const receiveDataFromDay=(data)=>{
         console.log("heo fksldjflkj",data)
         const ind = timeTableData.findIndex((t)=>t.day===data.day);
@@ -34,11 +38,17 @@ export default function TimeTableView(){
         setTimeTableData([
             ...timeTableData,
             {day:week_days[timeTableData.length]}
-        ])
+        ]);
+        setTimeTableInfo(
+            [
+                ...timeTableInfo,
+                {day:week_days[timeTableInfo.length],semRowsInfo:[]}
+            ]
+        );
     }
     return(
         <div className={"time-table-outer"}>
-            {timeTableData.map((data,index)=>(<Day key={v4()} timeTableData={timeTableData[index]} day_name={data.day} sendDataToParent={receiveDataFromDay}/>))}
+            {timeTableData.map((data,index)=>(<Day key={v4()} setTimeTableInfo={setTimeTableInfo} dayIndex={index} dayData={timeTableInfo[index]} timeTableInfo={timeTableInfo} timeTableData={timeTableData[index]} day_name={data.day} sendDataToParent={receiveDataFromDay}/>))}
             {show && (
                 <div className={"time-table-btn"}>
                     <Button onclick={handleDay} label={"Add Day"} />

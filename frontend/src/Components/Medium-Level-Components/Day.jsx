@@ -5,29 +5,10 @@ import {useEffect, useState} from "react";
 import {v4} from "uuid";
 import SemForm from "./SemForm";
 
-export default function Day({day_name,sendDataToParent,timeTableData}){
+export default function Day({dayData,dayIndex,setTimeTableInfo}){
     const [btnMsg,setBtnMsg] = useState("Add Semester");
     const [showLec,setLec] = useState(false);
-    const [semDeptBatchArr,setSemDeptBatchArr]=useState([]);
     const [semRowsInfo,setSemRowsInfo]=useState([]);
-    useEffect(() => {
-        if(timeTableData){
-            console.log("received time table data")
-            console.log(timeTableData)
-            if(timeTableData.semRowsInfo)setSemRowsInfo(timeTableData.semRowsInfo);
-            if(timeTableData.semDeptBatchArr)setSemDeptBatchArr(timeTableData.semDeptBatchArr);
-        }
-    }, []);
-    useEffect(() => {
-        console.log("semRowInfo Data")
-        console.log(semRowsInfo);
-    }, [semRowsInfo]);
-    console.log(day_name)
-    useEffect(() => {
-        console.log("semDeptBatchArr Data")
-        console.log(semDeptBatchArr);
-    }, [semDeptBatchArr]);
-
     const handleSem = (event)=>{
         event.preventDefault();
         setLec(!showLec);
@@ -35,20 +16,12 @@ export default function Day({day_name,sendDataToParent,timeTableData}){
         else setBtnMsg("Close");
     }
     const receiveDataFromSemForm=(semDeptBatch)=>{
-        const ind = semDeptBatchArr.findIndex((arr)=>(
-            arr.batch._id === semDeptBatch.batch._id &&
-            arr.dept._id === semDeptBatch.dept._id &&
-            arr.sem._id === semDeptBatch.sem._id
-        ))
-        if(ind !== -1){
-            const updateArr = [...semDeptBatchArr];
-            updateArr[ind] = semDeptBatch;
-            setSemDeptBatchArr(updateArr);
-        }else{
-            const updateArr = [...semDeptBatchArr]
-            updateArr.push(semDeptBatch)
-            setSemDeptBatchArr(updateArr)
-        }
+        setTimeTableInfo((prevState)=>{
+            console.log("received prevstate from timetable view for each day : -------------------",prevState)
+            const updated = [...prevState];
+            updated[dayIndex].semRowsInfo.push({sem:semDeptBatch,dataobj:{labsInfo:[],lecInfo:[]}})
+            return updated;
+        })
         setLec(false);
         setBtnMsg("Add Semester")
     }
@@ -60,28 +33,29 @@ export default function Day({day_name,sendDataToParent,timeTableData}){
         updateSemRow[index] = {dataObj,sem};
         setSemRowsInfo(updateSemRow);
     }
-    const handleSave=(event)=>{
-        event.preventDefault();
-        console.log("hello world")
-        sendDataToParent({day:day_name,semRowsInfo,semDeptBatchArr});
-    }
+    useEffect(() => {
+        console.log("---------------------------------------------------")
+        console.log("this is a day data");
+        console.log(dayData)
+    }, [dayData]);
     return(
     <div className={"day"}>
         <div className={"day-outer"}>
             <div className={"day-name"}>
-                <label>{day_name}</label>
+                <label>{dayData.day}</label>
                 <div>
-                    <Button label={"Save"} onclick={handleSave} />
+                    <Button label={"Save"}  />
                 </div>
             </div>
             <div className={"day-sem"}>
-                {semDeptBatchArr && semDeptBatchArr.length>0 && semDeptBatchArr.map(
-                    (sdp,index)=><SemRow  sendDataToDay={(newdata)=>receiveDataFromSemRow(index,newdata,sdp)} semRowInfo={semRowsInfo[index]} key={v4()} sem={sdp}/>
-                )}
+                {dayData.semRowsInfo.length>0 && dayData.semRowsInfo.map(
+                        (e,semRowIndex)=><SemRow dataobj={e.dataobj} sem={e.sem} semRowIndex={semRowIndex} setTimeTableInfo={setTimeTableInfo} dayIndex={dayIndex}/>
+                    )
+                }
                 <Button label={btnMsg} onclick={handleSem}/>
             </div>
             <div>
-                {showLec && <SemForm sendDataToParent={receiveDataFromSemForm} />}
+                {showLec && <SemForm  sendDataToParent={receiveDataFromSemForm} />}
             </div>
         </div>
         <hr style={{width:"100%"}}/>

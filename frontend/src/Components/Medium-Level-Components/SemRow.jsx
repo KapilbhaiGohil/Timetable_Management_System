@@ -28,26 +28,18 @@ const fetchAllDataInfo=async(semId,deptId,setAllDataInfo,batch)=>{
         console.log(e);
     }
 }
-export default function SemRow({sem,sendDataToDay,semRowInfo}){
+export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowIndex}){
     const [showForm,setShowForm] = useState(false);
     const [allDataInfo,setAllDataInfo] = useState();
-    const [labsInfo,setLabsInfo]=useState([]);
-    const [lecInfo,setLecInfo]=useState([]);
-    useEffect(() => {
-        if(semRowInfo!==undefined){
-            setLabsInfo(semRowInfo.dataObj.labsInfo)
-            setLecInfo(semRowInfo.dataObj.lecInfo);
-            sem = semRowInfo.dataObj.sem;
-        }
-    }, []);
+    console.log("received data into sem row ----------------------")
     useEffect(() => {
         console.log("Lecture info")
-        console.log(lecInfo)
-    }, [lecInfo]);
+        console.log(dataobj.lecInfo)
+    }, [dataobj.lecInfo]);
     useEffect(() => {
         console.log("labs info")
-        console.log(labsInfo)
-    }, [labsInfo]);
+        console.log(dataobj.labsInfo)
+    }, [dataobj.labsInfo]);
     const toggleForm=(event)=>{
         event.preventDefault();
         setShowForm(!showForm);
@@ -58,62 +50,72 @@ export default function SemRow({sem,sendDataToDay,semRowInfo}){
         fetchAllDataInfo(semId,deptId,setAllDataInfo,sem.batch);
     }, []);
     const receiveDataFromLab = (lab_data) => {
-        const ind = labsInfo.findIndex((lab)=>lab.labfrom===lab_data.labfrom && lab.labto===lab_data.labto);
+        const ind = dataobj.labsInfo.findIndex((lab)=>lab.labfrom===lab_data.labfrom && lab.labto===lab_data.labto);
         if (ind !== -1) {
-            const updatedInnerLabs = [...labsInfo[ind].labs, lab_data];
-            setLabsInfo((prevState)=> {
-                const updatedLabInfo = [...prevState];
-                updatedLabInfo[ind].labs = updatedInnerLabs;
-                return updatedLabInfo;
+            setTimeTableInfo((prevState)=>{
+                const updated = [...prevState]
+                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo[ind] = lab_data;
+                return updated;
             })
         } else {
-            setLabsInfo((prevLabsInfo)=>[
-                ...prevLabsInfo,
-                    {
-                        labs:[lab_data],
-                        labfrom:lab_data.labfrom,
-                        labto:lab_data.labto
-                    }
-            ])
+            setTimeTableInfo((prevState)=>{
+                const updated = [...prevState]
+                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo.push(lab_data);
+                return updated;
+            })
         }
     };
     const handleLabRemove=(labFrom,labTo)=>{
-        const updatedLabs = [...labsInfo];
-        const index = updatedLabs.findIndex((lab)=>lab.labfrom===labFrom && lab.labto===labTo);
+        const updatedLabs = [...dataobj.labsInfo];
+        const index = dataobj.labsInfo.findIndex((lab)=>lab.labfrom===labFrom && lab.labto===labTo);
         if(updatedLabs[index] && updatedLabs[index].labs){
-            updatedLabs[index].labs.pop();
+            setTimeTableInfo((prevState)=>{
+                const updated = [...prevState]
+                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo.pop();
+                return updated;
+            })
         }
         if(updatedLabs[index].labs.length===0){
-            const finalLabs = labsInfo.filter((lab)=>(lab.labfrom!==labFrom || lab.labto!==labTo));
-            setLabsInfo(finalLabs);
+            const finalLabs = dataobj.labsInfo.filter((lab)=>(lab.labfrom!==labFrom || lab.labto!==labTo));
+            setTimeTableInfo((prevState)=>{
+                const updated = [...prevState]
+                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo = finalLabs;
+                return updated;
+            })
         }else{
-            setLabsInfo(updatedLabs)
+            setTimeTableInfo((prevState)=>{
+                const updated = [...prevState]
+                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo = updatedLabs;
+                return updated;
+            })
         }
     }
     const handleLabDelete=(labFrom,labTo)=>{
-        const index = labsInfo.findIndex((lab)=>lab.labfrom===labFrom && lab.labto === labTo);
-        const updatedLab = [...labsInfo];
+        const index = dataobj.labsInfo.findIndex((lab)=>lab.labfrom===labFrom && lab.labto === labTo);
+        const updatedLab = [...dataobj.labsInfo];
         updatedLab.splice(index,1);
-        setLabsInfo(updatedLab);
+        setTimeTableInfo((prevState)=>{
+            const updated = [...prevState]
+            updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo = updatedLab;
+            return updated;
+        })
     }
     const receiveDataFromLec = (lec_data)=>{
-        setLecInfo([
-            ...lecInfo,
-            {data:lec_data}
-        ]);
+        setTimeTableInfo((prevState)=>{
+            const updated = [...prevState]
+            updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo.push({data:lec_data});
+            return updated;
+        })
     }
     const handleLecDelete=(lecFrom,lecTo)=>{
-        const index = lecInfo.findIndex((lec)=>(lec.data.lecfrom===lecFrom && lec.data.lecto===lecTo));
-        const updatedLec = lecInfo.filter((lec,ind)=>ind!==index);
-        setLecInfo(updatedLec);
+        const index = dataobj.lecInfo.findIndex((lec)=>(lec.data.lecfrom===lecFrom && lec.data.lecto===lecTo));
+        const updatedLec = dataobj.lecInfo.filter((lec,ind)=>ind!==index);
+        setTimeTableInfo((prevState)=>{
+            const updated = [...prevState]
+            updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo = updatedLec;
+            return updated;
+        })
     }
-    const handleSaveSemRow=(event)=>{
-        event.preventDefault();
-        sendDataToDay({labsInfo,lecInfo,sem});
-    }
-    // useEffect(() => {
-    //     sendDataToDay({labsInfo,lecInfo,sem})
-    // }, [sendDataToDay]);
     return(
         <div className={"sem-row"}>
             {showForm && <div className={"sem-row-forms"}>
@@ -137,12 +139,12 @@ export default function SemRow({sem,sendDataToDay,semRowInfo}){
                         <label>{sem.sem.semNo} - {sem.batch.batchName}</label>
                     </div>
                     <div className={"sem-row-info-btn"}>
-                        <Button label={"Save"} onclick={handleSaveSemRow}/>
+                        <Button label={"Save"} />
                         <Button label={"Forms"} onclick={toggleForm}/>
                     </div>
                 </div>
-                {lecInfo.length>0 && lecInfo.map((lec)=><LectureDetails  key={v4()} onDelete={()=>handleLecDelete(lec.data.lecfrom,lec.data.lecto)} lec_data={lec.data}/>)}
-                {labsInfo.length > 0 && labsInfo.map((lab)=><LabDetails  key={v4()} onDelete={()=>handleLabDelete(lab.labfrom,lab.labto)} onRemove={()=>handleLabRemove(lab.labfrom,lab.labto)} innerLabs={lab.labs} lab_data={lab} />)}
+                {dataobj.lecInfo.length>0 && dataobj.lecInfo.map((lec)=><LectureDetails  key={v4()} onDelete={()=>handleLecDelete(lec.data.lecfrom,lec.data.lecto)} lec_data={lec.data}/>)}
+                {dataobj.labsInfo.length > 0 && dataobj.labsInfo.map((lab)=><LabDetails  key={v4()} onDelete={()=>handleLabDelete(lab.labfrom,lab.labto)} onRemove={()=>handleLabRemove(lab.labfrom,lab.labto)} innerLabs={lab.labs} lab_data={lab} />)}
             </div>
         </div>
     )
