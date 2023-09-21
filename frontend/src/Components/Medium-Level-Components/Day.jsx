@@ -28,24 +28,11 @@ export default function Day({dayData,dayIndex,setTimeTableInfo}){
     const handleDay = (event)=>{
         event.preventDefault();
     }
-    const receiveDataFromSemRow=(index,dataObj,sem)=>{
-        const updateSemRow = [...semRowsInfo];
-        updateSemRow[index] = {dataObj,sem};
-        setSemRowsInfo(updateSemRow);
-    }
-    useEffect(() => {
-        console.log("---------------------------------------------------")
-        console.log("this is a day data");
-        console.log(dayData)
-    }, [dayData]);
     return(
     <div className={"day"}>
         <div className={"day-outer"}>
             <div className={"day-name"}>
                 <label>{dayData.day}</label>
-                <div>
-                    <Button label={"Save"}  />
-                </div>
             </div>
             <div className={"day-sem"}>
                 {dayData.semRowsInfo.length>0 && dayData.semRowsInfo.map(

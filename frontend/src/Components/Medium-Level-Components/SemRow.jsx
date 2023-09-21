@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import LabForm from "./LabForm";
 import LectureForm from "./LectureForm";
 import LabDetails from "./LabDetails";
-const fetchAllDataInfo=async(semId,deptId,setAllDataInfo,batch)=>{
+const fetchAllDataInfo = async(semId,deptId,setAllDataInfo,batch)=>{
     try{
         const response = await fetch("/custom/getAllDataInfo",{
             method:"POST",
@@ -31,36 +31,30 @@ const fetchAllDataInfo=async(semId,deptId,setAllDataInfo,batch)=>{
 export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowIndex}){
     const [showForm,setShowForm] = useState(false);
     const [allDataInfo,setAllDataInfo] = useState();
-    console.log("received data into sem row ----------------------")
-    useEffect(() => {
-        console.log("Lecture info")
-        console.log(dataobj.lecInfo)
-    }, [dataobj.lecInfo]);
-    useEffect(() => {
-        console.log("labs info")
-        console.log(dataobj.labsInfo)
-    }, [dataobj.labsInfo]);
     const toggleForm=(event)=>{
         event.preventDefault();
         setShowForm(!showForm);
     }
-    useEffect(() => {
-        const semId = sem.sem._id;
-        const deptId = sem.dept._id;
-        fetchAllDataInfo(semId,deptId,setAllDataInfo,sem.batch);
+    useEffect( () => {
+        async function fetch(){
+            const semId = sem.sem._id;
+            const deptId = sem.dept._id;
+            await fetchAllDataInfo(semId,deptId,setAllDataInfo,sem.batch);
+        }
+        fetch();
     }, []);
     const receiveDataFromLab = (lab_data) => {
         const ind = dataobj.labsInfo.findIndex((lab)=>lab.labfrom===lab_data.labfrom && lab.labto===lab_data.labto);
         if (ind !== -1) {
             setTimeTableInfo((prevState)=>{
                 const updated = [...prevState]
-                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo[ind] = lab_data;
+                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo[ind].labs.push(lab_data);
                 return updated;
             })
         } else {
             setTimeTableInfo((prevState)=>{
                 const updated = [...prevState]
-                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo.push(lab_data);
+                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo =  [ ...updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo ,{labs:[lab_data],labfrom: lab_data.labfrom,labto:lab_data.labto}];
                 return updated;
             })
         }
@@ -71,7 +65,7 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
         if(updatedLabs[index] && updatedLabs[index].labs){
             setTimeTableInfo((prevState)=>{
                 const updated = [...prevState]
-                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo.pop();
+                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo[index].labs.pop();
                 return updated;
             })
         }
@@ -85,7 +79,7 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
         }else{
             setTimeTableInfo((prevState)=>{
                 const updated = [...prevState]
-                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo = updatedLabs;
+                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo.labs = updatedLabs;
                 return updated;
             })
         }
@@ -118,7 +112,7 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
     }
     return(
         <div className={"sem-row"}>
-            {showForm && <div className={"sem-row-forms"}>
+            {allDataInfo && showForm && <div className={"sem-row-forms"}>
                 <div className={"sem-row-forms-div"}>
                      <LabForm allDataInfo={allDataInfo} sendDataToParent={receiveDataFromLab}/>
                 </div>
@@ -139,7 +133,7 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
                         <label>{sem.sem.semNo} - {sem.batch.batchName}</label>
                     </div>
                     <div className={"sem-row-info-btn"}>
-                        <Button label={"Save"} />
+                        <Button label={"Delete"} />
                         <Button label={"Forms"} onclick={toggleForm}/>
                     </div>
                 </div>

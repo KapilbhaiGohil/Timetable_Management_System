@@ -5,7 +5,7 @@ import TimeTableView from "./TimeTableView";
 export  default  function Home(){
     return (
         <div>
-            <TimeTableView/>
+            {/*<TimeTableView/>*/}
         </div>
     )
 }

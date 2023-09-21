@@ -1,6 +1,8 @@
 import "../../Css/Medium-Level-Css/LabDetails.scss"
 import {v4} from "uuid";
-export default function LabDetails({lab_data,onEdit,onDelete,innerLabs,onRemove}){
+export default function LabDetails({lab_data,onDelete,innerLabs,onRemove}){
+    console.log("received data to lab details ----------------------------")
+    console.log(lab_data,innerLabs);
     let a = lab_data.labfrom.split(':');
     let b = lab_data.labto.split(':');
     let minutes1 = (+a[0]) * 60 + (+a[1]);
@@ -24,7 +26,7 @@ export default function LabDetails({lab_data,onEdit,onDelete,innerLabs,onRemove}
             </div>
             <hr/>
             <div className={"lab-lab-info"}>
-                {innerLabs.map((lab)=><label key={v4()}>{lab.sub_batch} - {lab.sub.subCode} - {lab.teacher.shortName} - {lab.labInfo.lab}</label>)}
+                {lab_data.labs.map((lab)=><label key={v4()}>{lab.sub_batch} - {lab.sub.subCode} - {lab.teacher.shortName} - {lab.labInfo.lab}</label>)}
             </div>
             <div className={"lab-lab-links"}>
                 <button onClick={onDelete}>Delete</button>

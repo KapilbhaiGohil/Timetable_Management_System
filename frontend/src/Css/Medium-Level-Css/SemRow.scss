@@ -38,12 +38,21 @@
       border-radius: 1rem;
       border: 2px solid black;
       .sem-row-info-btn{
+        width: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: flex-end;
         >.button-container{
           padding: 0;
+          width: 100%;
+          >button{
+            background-color: $btndark;
+            padding: 0.2rem;
+            border-radius: 0.3rem;
+            font-size: 0.7rem;
+            margin: 0.2rem;
+          }
         }
       }
       .sem-row-dept{

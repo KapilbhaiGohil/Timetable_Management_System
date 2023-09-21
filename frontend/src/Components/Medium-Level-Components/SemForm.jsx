@@ -70,17 +70,17 @@ export default function SemForm ({sendDataToParent}){
     const [semOptions,setSemOptions]=useState([]);
     const [deptOptions,setDeptOptions] = useState([]);
     const [batchOptions,setBatchOptions]=useState([]);
-    const handleSelectionChange = (event)=>{
+    const handleSelectionChange = async (event)=>{
         event.preventDefault();
         setSem({
             ...sem,
             [event.target.name] : event.target.value,
         });
         if(event.target.name==="dept"){
-            getSemByDept(event.target.value,setSemOptions);
+            await getSemByDept(event.target.value,setSemOptions);
         }else if(event.target.name==='sem'){
             const sem = semOptions.find((sem)=>sem.semNo===parseInt(event.target.value));
-            getBatch(sem._id,setBatchOptions);
+            await getBatch(sem._id,setBatchOptions);
         }
     }
     const handleSubmit=(event)=>{
@@ -93,7 +93,10 @@ export default function SemForm ({sendDataToParent}){
         sendDataToParent(obj);
     }
     useEffect(()=>{
-        fetchDept(setDeptOptions).catch((e)=>window.alert(e));
+        async function fetch  (){
+            await fetchDept(setDeptOptions).catch((e)=>window.alert(e));
+        }
+        fetch();
     },[])
     return(
         <>

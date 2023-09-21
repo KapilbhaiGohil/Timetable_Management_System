@@ -10,11 +10,12 @@ import Footer from "./Components/Medium-Level-Components/Footer"
 import Database from "./Components/Database-Components/Database"
 import "./Css/Higher-Level-Css/App.scss"
 import "./Css/Higher-Level-Css/Login.scss"
+import DesignTimeTable from "./Components/Higher-Level-Componenets/DesignTimeTable";
 function App() {
     const navData = [
         {to:'/',name:"Home"},
         {to:"/about",name:"About Us"},
-        {to:"/contact",name:"Contact Us"},
+        {to:"/design",name:"Design Time Table"},
         {to:"/login",name:"Login"},
         {to:"/register",name:"Register"},
         {to:"/database",name:  "Database"}
@@ -27,7 +28,7 @@ function App() {
                   <Route path={'/'} element={<Home/>}/>
                   <Route path={'/home'} element={<Home/>}/>
                   <Route path={'/about'} element={<About/>}/>
-                  <Route path={'/contact'} element={<Contact/>}/>
+                  <Route path={'/design'} element={<DesignTimeTable/>}/>
                   <Route path={'/register'} element={<Register/>}/>
                   <Route path={'/login'} element={<Login/>}/>
                   <Route path={'/database'} element={<Database/>}/>
