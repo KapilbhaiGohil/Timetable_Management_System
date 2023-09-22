@@ -23,21 +23,20 @@ const saveTimeTableInfo=async function (timeTableInfo){
         console.log(e);
     }
 }
-export default function TimeTableView(){
+export default function TimeTableView({data}){
     const [show,setShow] = useState(true);
     const week_days = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
-    const [timeTableData,setTimeTableData] = useState([]);
     const [timeTableInfo,setTimeTableInfo] = useState([]);
+    // console.log("data")
+    useEffect(() => {
+        if(data)setTimeTableInfo(data.timeTableInfo);
+    }, [data]);
     useEffect(() => {
         console.log("This is final time table info ------------------------------------");
         console.log(timeTableInfo);
     }, [timeTableInfo]);
     const handleDay = (event)=>{
         event.preventDefault();
-        setTimeTableData([
-            ...timeTableData,
-            {day:week_days[timeTableData.length]}
-        ]);
         setTimeTableInfo(
             [
                 ...timeTableInfo,
@@ -50,7 +49,7 @@ export default function TimeTableView(){
     }
     return(
         <div className={"time-table-outer"}>
-            {timeTableData.map((data,index)=>(<Day key={v4()} setTimeTableInfo={setTimeTableInfo} dayIndex={index} dayData={timeTableInfo[index]} timeTableInfo={timeTableInfo}  day_name={data.day} />))}
+            {timeTableInfo.map((data,index)=>(<Day key={v4()} setTimeTableInfo={setTimeTableInfo} dayIndex={index} dayData={timeTableInfo[index]} timeTableInfo={timeTableInfo}  day_name={data.day} />))}
             {show && (
                 <div className={"time-table-btn"}>
                     <Button onclick={handleDay} label={"Add Day"} />

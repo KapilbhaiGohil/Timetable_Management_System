@@ -58,7 +58,7 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
             await fetchAllDataInfo(semId,deptId,setAllDataInfo,sem.batch);
         }
         fetch();
-    }, []);
+    }, [fetchAllDataInfo]);
     const receiveDataFromLab = (lab_data) => {
         const ind = dataobj.labsInfo.findIndex((lab)=>lab.labfrom===lab_data.labfrom && lab.labto===lab_data.labto);
         if (ind !== -1) {
@@ -157,8 +157,9 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
             return updated;
         })
     }
-    const handleSemRowDelete = ()=>{
-        if(window.confirm("Are you sure to delete ? ")){
+    const handleSemRowDelete = async ()=>{
+        const ok = window.confirm("Are you sure to delete ? ");
+        if(ok){
             setTimeTableInfo((prevState)=>{
                 const updated = [...prevState];
                 updated[dayIndex].semRowsInfo = updated[dayIndex].semRowsInfo.filter((o)=>o.sem!==sem);

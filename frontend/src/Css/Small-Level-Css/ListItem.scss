@@ -1,0 +1,31 @@
+@import "../Higher-Level-Css/Colors";
+
+.list-outer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  color: $first;
+  font-size: 1.5rem;
+  border-radius: 1rem;
+  border: 0.1rem solid $first ;
+  border-collapse: collapse;
+  padding: 0.6rem;
+  .list-main{
+
+  }
+  .list-btn{
+    width: 20%;
+    display: flex;
+    flex-direction: row;
+    >.button-container {
+      padding: 0;
+      > Button{
+        border-radius: 0.2rem;
+        padding: 0.3rem;
+        margin: 0.3rem;
+      }
+
+    }
+  }
+}

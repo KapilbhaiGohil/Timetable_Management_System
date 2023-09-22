@@ -16,17 +16,20 @@ export default function Day({dayData,dayIndex,setTimeTableInfo}){
         else setBtnMsg("Close");
     }
     const receiveDataFromSemForm=(semDeptBatch)=>{
+
         setTimeTableInfo((prevState)=>{
-            console.log("received prevstate from timetable view for each day : -------------------",prevState)
             const updated = [...prevState];
-            updated[dayIndex].semRowsInfo.push({sem:semDeptBatch,dataobj:{labsInfo:[],lecInfo:[]}})
-            return updated;
+            const isPresent = updated[dayIndex].semRowsInfo.find((data)=>data.sem.sem._id===semDeptBatch.sem._id && data.sem.dept._id===semDeptBatch.dept._id && data.sem.batch._id===semDeptBatch.batch._id);
+            if(isPresent){
+                window.alert("Selected Sem Row Already Exist");
+                return prevState;
+            }else{
+                updated[dayIndex].semRowsInfo.push({sem:semDeptBatch,dataobj:{labsInfo:[],lecInfo:[]}})
+                return updated;
+            }
         })
         setLec(false);
         setBtnMsg("Add Semester")
-    }
-    const handleDay = (event)=>{
-        event.preventDefault();
     }
     return(
     <div className={"day"}>
@@ -36,7 +39,7 @@ export default function Day({dayData,dayIndex,setTimeTableInfo}){
             </div>
             <div className={"day-sem"}>
                 {dayData.semRowsInfo.length>0 && dayData.semRowsInfo.map(
-                        (e,semRowIndex)=><SemRow dataobj={e.dataobj} sem={e.sem} semRowIndex={semRowIndex} setTimeTableInfo={setTimeTableInfo} dayIndex={dayIndex}/>
+                        (e,semRowIndex)=><SemRow key={v4()} dataobj={e.dataobj} sem={e.sem} semRowIndex={semRowIndex} setTimeTableInfo={setTimeTableInfo} dayIndex={dayIndex}/>
                     )
                 }
                 <Button label={btnMsg} onclick={handleSem}/>

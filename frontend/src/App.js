@@ -11,14 +11,16 @@ import Database from "./Components/Database-Components/Database"
 import "./Css/Higher-Level-Css/App.scss"
 import "./Css/Higher-Level-Css/Login.scss"
 import DesignTimeTable from "./Components/Higher-Level-Componenets/DesignTimeTable";
+import SavedTimeTable from "./Components/Higher-Level-Componenets/SavedTimeTable";
 function App() {
     const navData = [
         {to:'/',name:"Home"},
-        {to:"/about",name:"About Us"},
+        {to:"/timetables",name:  "TimeTables"},
         {to:"/design",name:"Design"},
+        {to:"/about",name:"About Us"},
+        {to:"/database",name:  "Database"},
         {to:"/login",name:"Login"},
         {to:"/register",name:"Register"},
-        {to:"/database",name:  "Database"}
     ]
   return (
       <>
@@ -32,6 +34,7 @@ function App() {
                   <Route path={'/register'} element={<Register/>}/>
                   <Route path={'/login'} element={<Login/>}/>
                   <Route path={'/database'} element={<Database/>}/>
+                  <Route path={'/timetables'} element={<SavedTimeTable/>}/>
               </Routes>
               <Footer/>
           </Router>
