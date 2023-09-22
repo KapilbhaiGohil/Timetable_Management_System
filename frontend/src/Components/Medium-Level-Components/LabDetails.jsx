@@ -22,7 +22,7 @@ export default function LabDetails({lab_data,onDelete,innerLabs,onRemove}){
     return(
         <div className={"lab-lab-outer"} style={{width:`${getWidth()}vw`,position:"absolute",marginLeft:`${getPostion()}vw`,}}>
             <div className={"lab-lab-time"}>
-                <label>{lab_data.labfrom} : {lab_data.labto}</label>
+                <label>{lab_data.labfrom} - {lab_data.labto}</label>
             </div>
             <hr/>
             <div className={"lab-lab-info"}>

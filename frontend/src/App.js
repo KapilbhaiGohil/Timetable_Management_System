@@ -15,7 +15,7 @@ function App() {
     const navData = [
         {to:'/',name:"Home"},
         {to:"/about",name:"About Us"},
-        {to:"/design",name:"Design Time Table"},
+        {to:"/design",name:"Design"},
         {to:"/login",name:"Login"},
         {to:"/register",name:"Register"},
         {to:"/database",name:  "Database"}
