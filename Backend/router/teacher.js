@@ -3,6 +3,7 @@ const teacherRouter = express.Router();
 teacherRouter.use(express.json());
 const Dept = require('../models/Deptartment')
 const Teacher = require('../models/Teacher')
+const Lab = require("../models/Lab");
 
 teacherRouter.post('/add',async(req,res)=>{
     try{
@@ -19,5 +20,17 @@ teacherRouter.post('/add',async(req,res)=>{
         return res.status(500).send({message:"Internal server error"})
     }
 })
-
+teacherRouter.post('/getAllTeacher',async(req,res)=>{
+    try{
+        const data = await Teacher.find({});
+        if(!data)return res.status(404).send({message:"No Teachers found"})
+        const finaldata = [];
+        for(const obj of data){
+            finaldata.push({teacher:obj,availability:[]});
+        }
+        return res.status(200).json(finaldata);
+    }catch(e){
+        return res.status(500).send({message:"Internal server error"})
+    }
+})
 module.exports = teacherRouter

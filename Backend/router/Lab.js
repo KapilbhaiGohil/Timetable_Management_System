@@ -2,6 +2,7 @@ const express = require('express')
 const labRouter = express.Router();
 const Dept = require('../models/Deptartment')
 const Lab = require('../models/Lab')
+const Class = require("../models/Class");
 labRouter.use(express.json());
 
 labRouter.post('/add',async(req,res)=>{
@@ -19,5 +20,17 @@ labRouter.post('/add',async(req,res)=>{
         return res.status(500).send({message:"Internal server error"})
     }
 })
-
+labRouter.post('/getAllLabs',async(req,res)=>{
+    try{
+        const data = await Lab.find({});
+        if(!data)return res.status(404).send({message:"No Labs found"})
+        const finaldata = [];
+        for(const obj of data){
+            finaldata.push({lab:obj,availability:[]});
+        }
+        return res.status(200).json(finaldata);
+    }catch(e){
+        return res.status(500).send({message:"Internal server error"})
+    }
+})
 module.exports = labRouter;

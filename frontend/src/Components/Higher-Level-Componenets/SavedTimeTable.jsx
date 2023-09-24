@@ -51,8 +51,8 @@ export default  function SavedTimeTable(){
         }
         helper();
     }, []);
-    const handleEdit=(timeTableInfo)=>{
-        navigate("/design",{state:{ttData:timeTableInfo}});
+    const handleEdit=(timetable)=>{
+        navigate("/design",{state:{ttData:timetable}});
     }
     return(
         <div>

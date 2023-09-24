@@ -5,10 +5,9 @@ import {useEffect, useState} from "react";
 import {v4} from "uuid";
 import SemForm from "./SemForm";
 
-export default function Day({dayData,dayIndex,setTimeTableInfo}){
+export default function Day({dayData,dayIndex,setTimeTableInfo,setWorkload,setLabAvailability,setRoomAvailability,setTeacherAvailability}){
     const [btnMsg,setBtnMsg] = useState("Add Semester");
     const [showLec,setLec] = useState(false);
-    const [semRowsInfo,setSemRowsInfo]=useState([]);
     const handleSem = (event)=>{
         event.preventDefault();
         setLec(!showLec);
@@ -16,7 +15,6 @@ export default function Day({dayData,dayIndex,setTimeTableInfo}){
         else setBtnMsg("Close");
     }
     const receiveDataFromSemForm=(semDeptBatch)=>{
-
         setTimeTableInfo((prevState)=>{
             const updated = [...prevState];
             const isPresent = updated[dayIndex].semRowsInfo.find((data)=>data.sem.sem._id===semDeptBatch.sem._id && data.sem.dept._id===semDeptBatch.dept._id && data.sem.batch._id===semDeptBatch.batch._id);
@@ -39,7 +37,7 @@ export default function Day({dayData,dayIndex,setTimeTableInfo}){
             </div>
             <div className={"day-sem"}>
                 {dayData.semRowsInfo.length>0 && dayData.semRowsInfo.map(
-                        (e,semRowIndex)=><SemRow key={v4()} dataobj={e.dataobj} sem={e.sem} semRowIndex={semRowIndex} setTimeTableInfo={setTimeTableInfo} dayIndex={dayIndex}/>
+                        (e,semRowIndex)=><SemRow key={v4()} dataobj={e.dataobj} sem={e.sem} semRowIndex={semRowIndex} setTimeTableInfo={setTimeTableInfo} setWorkload={setWorkload} dayIndex={dayIndex} setTeacherAvailability={setTeacherAvailability} setLabAvailability={setLabAvailability} setRoomAvailability={setRoomAvailability}/>
                     )
                 }
                 <Button label={btnMsg} onclick={handleSem}/>
@@ -48,7 +46,7 @@ export default function Day({dayData,dayIndex,setTimeTableInfo}){
                 {showLec && <SemForm  sendDataToParent={receiveDataFromSemForm} />}
             </div>
         </div>
-        <hr style={{width:"100%"}}/>
+        <hr style={{width:"100vw"}}/>
     </div>
     );
 }

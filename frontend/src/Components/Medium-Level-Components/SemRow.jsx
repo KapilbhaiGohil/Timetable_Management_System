@@ -6,6 +6,16 @@ import {useEffect, useState} from "react";
 import LabForm from "./LabForm";
 import LectureForm from "./LectureForm";
 import LabDetails from "./LabDetails";
+import {
+    labsAndTeacherAvailability, removeLabAvailability, removeLabAvailabilityOnRowDelete,
+    removeRoomAvailability,
+    removeRoomAvailabilityOnRowDelete,
+    removeTeacherAvailability,
+    removeTeacherAvailabilityOnRowDelete,
+    roomAndTeacherAvailability,
+    Rowconflict,
+    timeConflict
+} from "./ConflictResolution"
 const fetchAllDataInfo = async(semId,deptId,setAllDataInfo,batch)=>{
     try{
         const response = await fetch("/custom/getAllDataInfo",{
@@ -28,23 +38,8 @@ const fetchAllDataInfo = async(semId,deptId,setAllDataInfo,batch)=>{
         console.log(e);
     }
 }
-const timeConflict =(from,to,nfrom,nto)=>{
-    console.log(from,to,nfrom,nto)
-    let [hfrom,mfrom] = from.split(':').map(Number);
-    let [hto,mto] = to.split(':').map(Number);
-    let [hnfrom,mnfrom] = nfrom.split(':').map(Number);
-    let [hnto,mnto] = nto.split(':').map(Number);
-    hfrom = hfrom<7?hfrom+12:hfrom;
-    hto = hto<7?hto+12:hto;
-    hnfrom = hnfrom<7?hnfrom+12:hnfrom;
-    hnto = hnto<7?hnto+12:hnto;
-    const minfrom = hfrom * 60 + mfrom;
-    const minto = hto * 60 + mto;
-    const minfrom2 = hnfrom * 60 + mnfrom;
-    const minto2 = hnto * 60 +mnto;
-    return ((minfrom2<=minfrom && minto2 > minfrom)||(minfrom2<minto && minto2 > minto)||(minfrom2>=minfrom && minto2<=minto));
-}
-export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowIndex}){
+
+export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowIndex,setWorkload,setLabAvailability,setRoomAvailability,setTeacherAvailability}){
     const [showForm,setShowForm] = useState(false);
     const [allDataInfo,setAllDataInfo] = useState();
     const toggleForm=(event)=>{
@@ -64,40 +59,46 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
         if (ind !== -1) {
             setTimeTableInfo((prevState)=>{
                 const updated = [...prevState];
-                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo[ind].labs.push(lab_data);
-                return updated;
-            })
+                const  res = labsAndTeacherAvailability(setLabAvailability,setTeacherAvailability,lab_data,sem,dayIndex);
+                if(res.conflict){
+                    window.alert(res.message);
+                    return updated;
+                }else{
+                    updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo[ind].labs.push(lab_data);
+                    return updated;
+                }
+            });
         } else {
             setTimeTableInfo((prevState)=>{
                 const updated = [...prevState]
                 const labs = updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo;
                 const lectures = updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo;
-                let msg = "lecture",from="",to="";
-                const conflictLec = lectures.find((o)=>timeConflict(o.data.lecfrom,o.data.lecto,lab_data.labfrom,lab_data.labto));
-                const conflictlab = labs.find((o)=>timeConflict(o.labfrom,o.labto,lab_data.labfrom,lab_data.labto));
-                if(conflictLec || conflictlab) {
-                    if (conflictlab) {
-                        msg = "lab";
-                        from = conflictlab.labfrom;
-                        to = conflictlab.labto
-                    } else if (conflictLec) {
-                        from = conflictLec.data.lecfrom;
-                        to = conflictLec.data.lecto
+                const res = Rowconflict(labs,lectures,lab_data.labfrom,lab_data.labto);
+                if(res.conflict){window.alert(res.message);return prevState}
+                else{
+                    const res2 = labsAndTeacherAvailability(setLabAvailability,setTeacherAvailability,lab_data,sem,dayIndex);
+                    if(res2.conflict){
+                        window.alert(res2.message);
+                        return updated;
+                    }else{
+                        updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo =  [ ...updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo ,{labs:[lab_data],labfrom: lab_data.labfrom,labto:lab_data.labto}];
+                        return updated;
                     }
-                    window.alert("Conflict with the " + msg + " from : " + from + " to : " + to);
-                    return prevState;
                 }
-                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo =  [ ...updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo ,{labs:[lab_data],labfrom: lab_data.labfrom,labto:lab_data.labto}];
-                return updated;
             })
         }
     };
     const handleLabRemove=(labFrom,labTo)=>{
         const updatedLabs = [...dataobj.labsInfo];
         const index = dataobj.labsInfo.findIndex((lab)=>lab.labfrom===labFrom && lab.labto===labTo);
+        console.log("this is index ",index,updatedLabs)
+        const labToBeDeleted = updatedLabs[index].labs[updatedLabs[index].labs.length-1];
+        console.log(labToBeDeleted)
         if(updatedLabs[index] && updatedLabs[index].labs){
             setTimeTableInfo((prevState)=>{
                 const updated = [...prevState]
+                removeLabAvailability(setLabAvailability,labToBeDeleted,labFrom,labTo,dayIndex)
+                removeTeacherAvailability(setTeacherAvailability,labToBeDeleted.teacher._id,labFrom,labTo,dayIndex)
                 updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo[index].labs.pop();
                 return updated;
             })
@@ -120,6 +121,13 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
     const handleLabDelete=(labFrom,labTo)=>{
         const index = dataobj.labsInfo.findIndex((lab)=>lab.labfrom===labFrom && lab.labto === labTo);
         const updatedLab = [...dataobj.labsInfo];
+        const lab = updatedLab[index];
+        console.log("This is a lab inside semrow lab delete",lab)
+        //both require changes
+        for (let i = 0; i < lab.labs.length; i++) {
+            removeLabAvailability(setLabAvailability,lab.labs[i],labFrom,labTo,dayIndex)
+            removeTeacherAvailability(setTeacherAvailability,lab.labs[i].teacher._id,labFrom,labTo,dayIndex)
+        }
         updatedLab.splice(index,1);
         setTimeTableInfo((prevState)=>{
             const updated = [...prevState]
@@ -130,21 +138,30 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
     const receiveDataFromLec = (lec_data)=>{
         setTimeTableInfo((prevState)=>{
             const updated = [...prevState]
-            //conflict resolution
             const lectures = updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo;
             const labs = updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo;
-            let msg = "lecture",from="",to="";
-            const conflictLec = lectures.find((o)=>timeConflict(o.data.lecfrom,o.data.lecto,lec_data.lecfrom,lec_data.lecto));
-            const conflictlab = labs.find((o)=>timeConflict(o.labfrom,o.labto,lec_data.lecfrom,lec_data.lecto));
-            if(conflictLec || conflictlab){
-                console.log(conflictlab,conflictLec)
-                if(conflictlab){msg = "lab";from=conflictlab.labfrom;to=conflictlab.labto}
-                else if(conflictLec){from = conflictLec.data.lecfrom;to = conflictLec.data.lecto};
-                window.alert("Conflict with the "+msg+" from : "+from+" to : "+to);
+            const res2 = Rowconflict(labs,lectures,lec_data.lecfrom,lec_data.lecto);
+            if(res2.conflict){
+                window.alert(res2.message);
                 return prevState;
             }else{
-                updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo.push({data:lec_data});
-                return updated;
+                const res = roomAndTeacherAvailability(setRoomAvailability,setTeacherAvailability,lec_data,sem,dayIndex)
+                if(res.conflict){window.alert(res.message);return prevState}
+                else{
+                    updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo.push({data:lec_data});
+                    setWorkload((prevWorkload)=>{
+                        const workload = [...prevWorkload];
+                        const pos = workload.findIndex((work)=>work.id===lec_data.teacher._id);
+                        if(pos!==-1){
+                            console.log("position is ",pos)
+                            workload[pos].lectures = [...workload[pos].lectures,{lec_data}]
+                        }else{
+                            workload.push({id:lec_data.teacher._id,labs:[],lectures:[{lec_data}]})
+                        }
+                        return workload;
+                    })
+                    return updated;
+                }
             }
         })
     }
@@ -153,9 +170,19 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
         const updatedLec = dataobj.lecInfo.filter((lec,ind)=>ind!==index);
         setTimeTableInfo((prevState)=>{
             const updated = [...prevState]
+            const lec = updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo[index];
             updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo = updatedLec;
+            removeRoomAvailability(setRoomAvailability,lec,lecFrom,lecTo,dayIndex);
+            removeTeacherAvailability(setTeacherAvailability,lec.data.teacher._id,lecFrom,lecTo,dayIndex);
+            setWorkload((prevWorkload)=>{
+                const workload = [...prevWorkload];
+                const tid = lec.data.teacher._id;
+                const wid = workload.findIndex((work)=>work.id===tid);
+                workload[wid].lectures = workload[wid].lectures.filter((lec)=>lec.lec_data.lecfrom!==lecFrom && lec.lec_data.lecto!==lecTo);
+                return workload;
+            })
             return updated;
-        })
+        });
     }
     const handleSemRowDelete = async ()=>{
         const ok = window.confirm("Are you sure to delete ? ");
@@ -163,6 +190,9 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
             setTimeTableInfo((prevState)=>{
                 const updated = [...prevState];
                 updated[dayIndex].semRowsInfo = updated[dayIndex].semRowsInfo.filter((o)=>o.sem!==sem);
+                removeTeacherAvailabilityOnRowDelete(setTeacherAvailability,sem,dayIndex);
+                removeRoomAvailabilityOnRowDelete(setRoomAvailability,sem,dayIndex);
+                removeLabAvailabilityOnRowDelete(setLabAvailability,sem,dayIndex)
                 return updated;
             });
         }
