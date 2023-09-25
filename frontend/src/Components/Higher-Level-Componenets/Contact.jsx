@@ -1,4 +1,3 @@
-import LabDetails from "../Medium-Level-Components/LabDetails";
 
 export  default  function Contact(){
     return (

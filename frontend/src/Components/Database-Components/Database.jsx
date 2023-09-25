@@ -1,5 +1,4 @@
 import {useState} from "react";
-import Button from "../Small-Level-Componenets/Button"
 import DeptTable from "./DeptTable";
 export default function Database(){
     const [departments,setDepartments] = useState([]);

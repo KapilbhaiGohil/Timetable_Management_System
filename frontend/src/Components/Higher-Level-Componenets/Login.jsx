@@ -4,12 +4,14 @@ import {VscUnlock} from "react-icons/vsc"
 import image from "../../Assets/login.svg"
 import Input from "../Small-Level-Componenets/Input";
 import Button from "../Small-Level-Componenets/Button"
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../../AuthContext";
 export  default  function Login(){
     const Navigate = useNavigate();
     const [email,setEmail] = useState("");
     const [pass,setPass] = useState("");
+    const {setIsLoggedIn} = useContext(AuthContext)
     const handleEmail = (e)=>{
         setEmail(e.target.value);
     }
@@ -29,6 +31,7 @@ export  default  function Login(){
             const data = await  res.json();
             if(res.status === 201){
                 window.alert(data.message);
+                setIsLoggedIn(true)
                 Navigate("/home");
             }else{
                 window.alert(data.message);

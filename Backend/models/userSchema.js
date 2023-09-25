@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
         name:{type:String,required :true},
         email:{type:String,required:true},
         password:{type:String,required:true},
-        tokens:[{token:{type:String}}]
+        token:{type:String}
     }
 );
 userSchema.pre('save',async function (next){
@@ -23,7 +23,8 @@ userSchema.pre('save',async function (next){
 userSchema.methods.generateAuthToken = async function(){
     try{
         generated_token =  jwt.sign({_id:this._id},process.env.SECRETKEY)
-        this.tokens = this.tokens.concat({token:generated_token})
+        // console.log(generated_token)
+        this.token = generated_token
         await this.save()
         return generated_token
     }catch(e){

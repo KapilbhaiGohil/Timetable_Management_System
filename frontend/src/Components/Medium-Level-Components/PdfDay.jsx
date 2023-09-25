@@ -1,7 +1,4 @@
-import SemRow from "./SemRow";
 import {v4} from "uuid";
-import Button from "../Small-Level-Componenets/Button";
-import SemForm from "./SemForm";
 import PdfSemRow from "./PdfSemRow";
 
 export default function PdfDay({dayData,dayIndex}){

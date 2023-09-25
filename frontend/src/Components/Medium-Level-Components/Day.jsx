@@ -1,7 +1,7 @@
 import SemRow from "./SemRow";
 import "../../Css/Medium-Level-Css/Day.scss"
 import Button from "../Small-Level-Componenets/Button"
-import {useEffect, useState} from "react";
+import { useState} from "react";
 import {v4} from "uuid";
 import SemForm from "./SemForm";
 

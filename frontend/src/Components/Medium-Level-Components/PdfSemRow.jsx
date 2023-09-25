@@ -1,9 +1,4 @@
-import LabForm from "./LabForm";
-import LectureForm from "./LectureForm";
-import Button from "../Small-Level-Componenets/Button";
-import LectureDetails from "./LectureDetails";
 import {v4} from "uuid";
-import LabDetails from "./LabDetails";
 import PdfLabDetails from "./PdfLabDetails";
 import PdfLecDetails from "./PdfLecDetails";
 
