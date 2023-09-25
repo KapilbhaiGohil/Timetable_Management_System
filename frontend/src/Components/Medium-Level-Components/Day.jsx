@@ -46,7 +46,7 @@ export default function Day({dayData,dayIndex,setTimeTableInfo,setWorkload,setLa
                 {showLec && <SemForm  sendDataToParent={receiveDataFromSemForm} />}
             </div>
         </div>
-        <hr style={{width:"100vw"}}/>
+        <hr style={{width:"95.6vw"}}/>
     </div>
     );
 }

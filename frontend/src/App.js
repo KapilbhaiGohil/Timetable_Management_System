@@ -12,6 +12,7 @@ import "./Css/Higher-Level-Css/App.scss"
 import "./Css/Higher-Level-Css/Login.scss"
 import DesignTimeTable from "./Components/Higher-Level-Componenets/DesignTimeTable";
 import SavedTimeTable from "./Components/Higher-Level-Componenets/SavedTimeTable";
+import Pdf from "./Components/Higher-Level-Componenets/Pdf";
 function App() {
     const navData = [
         {to:'/',name:"Home"},
@@ -34,6 +35,7 @@ function App() {
                   <Route path={'/register'} element={<Register/>}/>
                   <Route path={'/login'} element={<Login/>}/>
                   <Route path={'/database'} element={<Database/>}/>
+                  <Route path={'/pdf'} element={<Pdf/>}/>
                   <Route path={'/timetables'} element={<SavedTimeTable/>}/>
               </Routes>
               <Footer/>

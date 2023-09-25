@@ -54,9 +54,12 @@ export default  function SavedTimeTable(){
     const handleEdit=(timetable)=>{
         navigate("/design",{state:{ttData:timetable}});
     }
+    const handlePrint=(timetable)=>{
+        navigate("/pdf",{state:{ttData:timetable}});
+    }
     return(
         <div>
-            {timetables.length>0 && timetables.map((timetable,index)=><Listitem key={v4()} timetable={timetable} onDelete={()=>deleteTimeTable(timetable._id,setTimetables)} onEdit={()=>handleEdit(timetable)}/>)}
+            {timetables.length>0 && timetables.map((timetable,index)=><Listitem key={v4()} timetable={timetable} onPrint={()=>handlePrint(timetable)} onDelete={()=>deleteTimeTable(timetable._id,setTimetables)} onEdit={()=>handleEdit(timetable)}/>)}
         </div>
     )
 }
