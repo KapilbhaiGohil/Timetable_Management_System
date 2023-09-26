@@ -13,9 +13,11 @@ import DesignTimeTable from "./Components/Higher-Level-Componenets/DesignTimeTab
 import SavedTimeTable from "./Components/Higher-Level-Componenets/SavedTimeTable";
 import Pdf from "./Components/Higher-Level-Componenets/Pdf";
 import {AuthContext} from "./AuthContext";
+import LoadingScreen from "./Components/Small-Level-Componenets/LoadingScreen";
 
-const getLoginStaus =async (setIsLoggedIn)=>{
+const getLoginStaus =async (setIsLoggedIn,setIsLoading)=>{
     try{
+        setIsLoading(true);
         const res = await fetch("/auth/authenticate",{
             method:"POST",
             headers:{
@@ -29,13 +31,16 @@ const getLoginStaus =async (setIsLoggedIn)=>{
         }
     }catch (e){
         window.alert(e);
+    }finally {
+        setIsLoading(false);
     }
 }
 function App() {
-    const {isLoggedIn,setIsLoggedIn} = useContext(AuthContext)
+    const {isLoggedIn,setIsLoggedIn,setIsLoading,isLoading} = useContext(AuthContext)
+    // setIsLoading(true);
     useEffect(() => {
         async function helper(){
-            await getLoginStaus(setIsLoggedIn);
+            await getLoginStaus(setIsLoggedIn,setIsLoading);
         }
         helper();
     }, []);
@@ -47,7 +52,7 @@ function App() {
             {to:"/design",name:"Design"},
             {to:"/about",name:"About Us"},
             {to:"/database",name:  "Database"},
-            {to:"/logout",name:"Logout"},
+            // {to:"/logout",name:"Logout"},
         ]
     }else{
         navData = [
@@ -61,18 +66,19 @@ function App() {
       <>
               <Router>
                   <Navbar navData={navData}/>
+                  {isLoading && <LoadingScreen/>}
                   <Routes>
-                      {!isLoggedIn && <Route path={'/'} element={<Home/>}/>}
-                      {!isLoggedIn && <Route path={'/home'} element={<Home/>}/>}
-                      {!isLoggedIn && <Route path={'/about'} element={<About/>}/>}
+                      {<Route path={'/'} element={<Home/>}/>}
+                      {<Route path={'/home'} element={<Home/>}/>}
+                      {<Route path={'/about'} element={<About/>}/>}
                       {!isLoggedIn && <Route path={'/register'} element={<Register/>}/>}
                       {!isLoggedIn && <Route path={'/login'} element={<Login/>}/>}
-                      {!isLoggedIn && <Route path={"*"} element={<Navigate to={"/login"}/>}></Route>}
                       {isLoggedIn && <Route path={'/database'} element={<Database/>}/>}
                       {isLoggedIn && <Route path={'/pdf'} element={<Pdf/>}/>}
                       {isLoggedIn && <Route path={'/timetables'} element={<SavedTimeTable/>}/>}
                       {isLoggedIn && <Route path={'/design'} element={<DesignTimeTable/>}/>}
-                      {/*{isLoggedIn && <Route path={'/login'} element={}/>}*/}
+                      {/*{!isLoggedIn && <Route path={"*"} element={<Navigate to={"/login"}/>}></Route>}*/}
+                      {/*{isLoggedIn && <Route path={"*"} element={<Navigate to={"/home"}/>}></Route>}*/}
                   </Routes>
                   <Footer/>
               </Router>

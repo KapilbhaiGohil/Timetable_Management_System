@@ -1,7 +1,8 @@
 import Dropdown from "../Small-Level-Componenets/Dropdown";
 import Button from "../Small-Level-Componenets/Button";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import "../../Css/Medium-Level-Css/SemForm.scss"
+import {AuthContext} from "../../AuthContext";
 
 async function fetchDept(setDeptOptions){
     try{
@@ -70,6 +71,7 @@ export default function SemForm ({sendDataToParent}){
     const [semOptions,setSemOptions]=useState([]);
     const [deptOptions,setDeptOptions] = useState([]);
     const [batchOptions,setBatchOptions]=useState([]);
+    const {setIsLoading} = useContext(AuthContext)
     const handleSelectionChange = async (event)=>{
         event.preventDefault();
         setSem({

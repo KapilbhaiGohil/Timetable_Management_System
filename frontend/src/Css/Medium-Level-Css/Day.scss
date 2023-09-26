@@ -10,7 +10,7 @@
     justify-content: flex-start;
     align-items: center;
     .day-name{
-      border: 2px solid black;
+      border: 2px solid $second;
       border-radius: 1rem;
       margin: 1rem;
       align-self: stretch;
@@ -25,6 +25,14 @@
       flex-direction: column;
       justify-content: center;
       align-items: flex-start;
+      >.button-container{
+        width: 12rem;
+        height: 4rem;
+        border-radius: 1rem;
+        >button{
+          border-radius: 0.5rem;
+        }
+      }
       >div{
         margin: 1rem;
       }

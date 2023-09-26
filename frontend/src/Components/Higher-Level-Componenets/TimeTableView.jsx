@@ -1,9 +1,11 @@
 import "../../Css/Higher-Level-Css/TImeTableView.scss"
 import Day from "../Medium-Level-Components/Day";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {v4} from "uuid";
 import Button from "../Small-Level-Componenets/Button";
-const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvailability,teacherAvailability){
+import {AuthContext} from "../../AuthContext";
+const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading){
+    setIsLoading(true);
     try{
         const response = await fetch("/timetable/add",{
             method:"POST",
@@ -21,6 +23,8 @@ const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvaila
     }catch (e) {
         window.alert(e);
         console.log(e);
+    }finally {
+        setIsLoading(false);
     }
 }
 const getAllTeachers=async(setTeachresAvailability,week_days)=>{
@@ -95,6 +99,7 @@ const getAllClassrooms=async(setClassroomsAvailability,week_days)=>{
 export default function TimeTableView({data}){
     const [show,setShow] = useState(true);
     const week_days = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+    const {setIsLoading} = useContext(AuthContext)
     const [timeTableInfo,setTimeTableInfo] = useState([]);
     const [labAvailability,setLabAvailability] = useState([]);
     const [roomAvailability,setRoomAvailability] =  useState([]);
@@ -112,9 +117,11 @@ export default function TimeTableView({data}){
             }
         }else{
             async function helper(){
+                setIsLoading(true)
                 await getAllLabs(setLabAvailability,week_days);
                 await getAllTeachers(setTeacherAvailability,week_days);
                 await getAllClassrooms(setRoomAvailability,week_days);
+                setIsLoading(false)
             }
             helper();
         }
@@ -150,7 +157,7 @@ export default function TimeTableView({data}){
                     <Button onclick={handleDay} label={"Add Day"} />
                 </div>
             )}
-            <div><Button label={"Save"} onclick={()=>saveTimeTableInfo(timeTableInfo,labAvailability,roomAvailability,teacherAvailability)}/></div>
+            <div><Button label={"Save"} onclick={()=>saveTimeTableInfo(timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading)}/></div>
         </div>
     )
 }

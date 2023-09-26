@@ -2,7 +2,7 @@ import {v4} from "uuid";
 import "../../Css/Medium-Level-Css/SemRow.scss"
 import LectureDetails from "./LectureDetails";
 import Button from "../Small-Level-Componenets/Button"
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import LabForm from "./LabForm";
 import LectureForm from "./LectureForm";
 import LabDetails from "./LabDetails";
@@ -16,6 +16,7 @@ import {
     Rowconflict,
     timeConflict
 } from "./ConflictResolution"
+import {AuthContext} from "../../AuthContext";
 const fetchAllDataInfo = async(semId,deptId,setAllDataInfo,batch)=>{
     try{
         const response = await fetch("/custom/getAllDataInfo",{
@@ -42,6 +43,7 @@ const fetchAllDataInfo = async(semId,deptId,setAllDataInfo,batch)=>{
 export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowIndex,setWorkload,setLabAvailability,setRoomAvailability,setTeacherAvailability}){
     const [showForm,setShowForm] = useState(false);
     const [allDataInfo,setAllDataInfo] = useState();
+    const {setIsLoading} = useContext(AuthContext)
     const toggleForm=(event)=>{
         event.preventDefault();
         setShowForm(!showForm);

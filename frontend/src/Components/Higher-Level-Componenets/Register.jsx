@@ -5,17 +5,20 @@ import {AiOutlineMail} from "react-icons/ai"
 import {VscUnlock} from "react-icons/vsc"
 import {BsPerson} from "react-icons/bs"
 import "../../Css/Higher-Level-Css/Register.scss"
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../../AuthContext";
 export  default  function Register(){
     const Navigate = useNavigate();
     const [user,setUser]=useState({name:"",email:"",password:"",cpassword:""});
+    const {setIsLoading} = useContext(AuthContext)
     const handleSubmit=async (event)=>{
         event.preventDefault();
         const {name,email,password,cpassword} = user;
         if(password!==cpassword){
             window.alert("Password and confirm password didn't match")
         }else {
+            setIsLoading(true)
             try {
                 const res = await fetch("auth/register", {
                     method: "POST",
@@ -27,13 +30,14 @@ export  default  function Register(){
                 const data = await res.json();
                 // console.log(data);
                 if(res.ok){
-                    window.alert("data saved succesfully");
                     Navigate("/login");
                 }else{
                     window.alert(data.message);
                 }
             } catch (e) {
                 window.alert(e.message);
+            }finally {
+                setIsLoading(false)
             }
         }
     }

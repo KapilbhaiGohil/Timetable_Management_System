@@ -9,6 +9,7 @@
       width: 30vw;
       height: 61vh;
     }
+
     .dropdown-container{
       >form{
         .button-container{
@@ -29,14 +30,14 @@
       justify-content: flex-start;
       align-items: center;
       color: $first;
-      background-color: $second;
+      //background-color: ;
       width: 8.5vw;
       height: 20vh;
       padding: 1rem;
       text-transform: uppercase;
       font-weight: 500;
       border-radius: 1rem;
-      border: 2px solid black;
+      border: 2px solid $second;
       .sem-row-info-btn{
         width: 100%;
         display: flex;

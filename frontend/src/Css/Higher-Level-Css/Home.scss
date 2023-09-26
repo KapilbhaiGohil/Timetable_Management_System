@@ -1,0 +1,29 @@
+@import "Colors";
+
+.home-outer{
+  padding: 3rem;
+  color: $first;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  .home-main{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    .home-head{
+      text-align: center;
+      font-size: 2rem;
+      width: 45%;
+      >p{
+        filter: brightness(0.7);
+      }
+    }
+    .home-btn{
+      width: 15rem;
+      height: 6rem;
+    }
+  }
+
+}
