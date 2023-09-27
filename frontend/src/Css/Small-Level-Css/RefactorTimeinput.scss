@@ -1,0 +1,14 @@
+.refactor-timeinput{
+  display: flex;
+  flex-direction: row;
+  >div{
+    >input{
+      border:none;
+      outline: none;
+      padding: 1rem;
+      width: 9rem;
+      height: 3rem;
+      border-radius: 1rem;
+    }
+  }
+}

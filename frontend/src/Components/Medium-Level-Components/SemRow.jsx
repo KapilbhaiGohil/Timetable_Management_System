@@ -208,7 +208,7 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
                 <div className={"sem-row-forms-div"}>
                     <LectureForm allDataInfo={allDataInfo} sendDataToParent={receiveDataFromLec}/>
                 </div>
-                <div>
+                <div className={"sem-row-forms-btn"}>
                     <Button label={"Close"} onclick={toggleForm}/>
                 </div>
             </div>}

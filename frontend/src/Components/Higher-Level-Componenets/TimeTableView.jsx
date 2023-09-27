@@ -157,7 +157,7 @@ export default function TimeTableView({data}){
                     <Button onclick={handleDay} label={"Add Day"} />
                 </div>
             )}
-            <div><Button label={"Save"} onclick={()=>saveTimeTableInfo(timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading)}/></div>
+            <div className={"time-table-btn"}><Button label={"Save"} onclick={()=>saveTimeTableInfo(timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading)}/></div>
         </div>
     )
 }

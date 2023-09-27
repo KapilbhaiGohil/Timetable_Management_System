@@ -80,7 +80,7 @@ function App() {
                       {/*{!isLoggedIn && <Route path={"*"} element={<Navigate to={"/login"}/>}></Route>}*/}
                       {/*{isLoggedIn && <Route path={"*"} element={<Navigate to={"/home"}/>}></Route>}*/}
                   </Routes>
-                  <Footer/>
+                  {/*<Footer/>*/}
               </Router>
       </>
   );

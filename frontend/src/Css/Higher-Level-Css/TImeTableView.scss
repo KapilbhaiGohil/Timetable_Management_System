@@ -14,7 +14,11 @@
   .time-table-btn{
     width: 12%;
     .button-container{
-
+      width: 8rem;
+      height: 4rem;
+      >button{
+        border-radius: 0.4rem;
+      }
     }
   }
 }
