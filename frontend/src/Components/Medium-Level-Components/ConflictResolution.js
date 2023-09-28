@@ -1,4 +1,4 @@
-const {useParams} = require("react-router-dom");
+
 const roomAndTeacherAvailability=(setRoomAvailability,setTeacherAvailability,newlec,sem,dayindex)=>{
     const from = convertIntoMinutes(newlec.lecfrom);
     const to = convertIntoMinutes(newlec.lecto);
@@ -148,14 +148,18 @@ const conflictFromTo =(minfrom,minto,minfrom2,minto2)=>{
 
 const Rowconflict=(labs,lectures,lecfrom,lecto)=>{
     let msg = "lecture",from="",to="";
+    console.log("Labs and lectures in rowconflict",labs,lectures)
     const conflictLec = lectures.find((o)=>timeConflict(o.data.lecfrom,o.data.lecto,lecfrom,lecto));
     const conflictlab = labs.find((o)=>timeConflict(o.labfrom,o.labto,lecfrom,lecto));
+    console.log(conflictlab+" "+conflictLec);
     if(conflictLec || conflictlab){
+        console.log("inside if",conflictlab||conflictLec)
         if(conflictlab){msg = "lab";from=conflictlab.labfrom;to=conflictlab.labto;}
         else if(conflictLec){from = conflictLec.data.lecfrom;to = conflictLec.data.lecto}
         msg = "Conflict with the "+msg+" from : "+from+" to : "+to;
         return {message:msg,conflict:true}
     }else{
+        console.log("inside else")
         msg = "no Conflict"
         return {message:msg,conflict:false}
     }

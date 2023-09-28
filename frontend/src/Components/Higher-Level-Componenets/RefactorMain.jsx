@@ -10,11 +10,104 @@ import {
     getSemByDept,
     getSubjectsBySemesterId
 } from "../Medium-Level-Components/Functions";
-import {convertAndAddLectInfo} from "./Converter"
 
 import {AuthContext} from "../../AuthContext";
 import TimeTableView from "./TimeTableView";
 import Pdf from "./Pdf";
+import {AddLecture, addLectureWithSem} from "../Medium-Level-Components/lecture";
+import {roomAndTeacherAvailability, Rowconflict} from "../Medium-Level-Components/ConflictResolution";
+const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading){
+    setIsLoading(true);
+    try{
+        const response = await fetch("/timetable/add",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({timeTableInfo,labAvailability,roomAvailability,teacherAvailability}),
+        });
+        const data = await response.json();
+        if(response.status === 200){
+            window.alert(data.message);
+        }else{
+            window.alert(data.message);
+        }
+    }catch (e) {
+        window.alert(e);
+        console.log(e);
+    }finally {
+        setIsLoading(false);
+    }
+}
+const getAllTeachers=async(setTeachresAvailability,week_days)=>{
+    try{
+        const res = await fetch("/teacher/getAllTeacher",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            }
+        })
+        const data = await res.json();
+        if(res.status===200){
+            let finaldata = [];
+            for (let i = 0; i < week_days.length; i++) {
+                const dayData = { day: week_days[i], data: await JSON.parse(JSON.stringify(data)) };
+                finaldata.push(dayData);
+            }
+            setTeachresAvailability(finaldata);
+        }else{
+            window.alert(data.message);
+        }
+    }catch (e) {
+        window.alert(e);
+    }
+}
+const getAllLabs=async(setLabsAvailability,week_days)=>{
+    try{
+        const res = await fetch("/lab/getAllLabs",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            }
+        })
+        const data = await res.json();
+        if(res.status===200){
+            let finaldata = [];
+            for (let i = 0; i < week_days.length; i++) {
+                const dayData = { day: week_days[i], data: await JSON.parse(JSON.stringify(data)) };
+                finaldata.push(dayData);
+            }
+            setLabsAvailability(finaldata);
+        }else{
+            window.alert(data.message);
+        }
+    }catch (e) {
+        window.alert(e);
+    }
+}
+const getAllClassrooms=async(setClassroomsAvailability,week_days)=>{
+    try{
+        const res = await fetch("/class/getAllClassrooms",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            }
+        })
+        const data = await res.json();
+        if(res.status===200){
+            let finaldata = [];
+            for (let i = 0; i < week_days.length; i++) {
+                const dayData = { day: week_days[i], data:await JSON.parse(JSON.stringify(data)) };
+                finaldata.push(dayData);
+            }
+            setClassroomsAvailability(finaldata);
+        }else{
+            window.alert(data.message);
+        }
+    }catch (e) {
+        window.alert(e);
+    }
+}
 const createEmptyTimetableObject = () => ({
     semRowsInfo: [],
 });
@@ -27,17 +120,30 @@ export default function RefactorMain(){
     const [rallinfo ,setRallInfo] = useState([]);
     const [tempDSS,setTempDss] = useState([]);
     const [timeTableInfo,setTimeTableInfo] = useState([]);
+    const [labAvailability,setLabAvailability] = useState([]);
+    const [roomAvailability,setRoomAvailability] =  useState([]);
+    const [teacherAvailability,setTeacherAvailability] = useState([]);
+    const [workload,setWorkload] = useState([]);
     const week_days = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
     const {setIsLoading} = useContext(AuthContext);
     useEffect(() => {
-        let updated = [];
-        console.log(updated);
-        for (let i = 0; i < week_days.length; i++) {
-            const newobject = createEmptyTimetableObject();
-            newobject.day = week_days[i];
-            updated[i] = newobject
+        async function helper(){
+            let updated = [];
+            console.log(updated);
+            for (let i = 0; i < week_days.length; i++) {
+                const newobject = createEmptyTimetableObject();
+                newobject.day = week_days[i];
+                updated[i] = newobject
+            }
+            await setTimeTableInfo(updated);
+            setIsLoading(true);
+            await fetchDept(setRDeptOptions);
+            await getAllLabs(setLabAvailability,week_days);
+            await getAllTeachers(setTeacherAvailability,week_days);
+            await getAllClassrooms(setRoomAvailability,week_days);
+            setIsLoading(false);
         }
-        setTimeTableInfo(updated);
+        helper();
     }, []);
     useEffect(() => {
         setShow(false);
@@ -76,11 +182,12 @@ export default function RefactorMain(){
         setIsLoading(false);
         if(res){
             setShow(true)
+            setShowLab(true)
             setTempDss({dept,sem,sub});
         }
 
     }
-    const handleAddLecture=async (event)=>{
+    const handleAddLecture=(event)=>{
         event.preventDefault();
         const batch = rallinfo.batches.find((batch)=>batch.batchName===event.target.batch.value);
         const day_ind = week_days.findIndex((day)=>day===event.target.day.value);
@@ -88,27 +195,28 @@ export default function RefactorMain(){
         const classroom = rallinfo.classrooms.find((c)=>c.classroom ===parseInt(event.target.classroom.value));
         const lecfrom = event.target.lecfrom.value;
         const lecto = event.target.lecto.value;
-        console.log(batch,week_days[day_ind],teacher,classroom,lecfrom,lecto);
         const ind = timeTableInfo[day_ind].semRowsInfo.findIndex((data)=>data.sem.sem._id===tempDSS.sem._id && data.sem.dept._id===tempDSS.dept._id && data.sem.batch._id===batch._id);
-        console.log("Index is ",ind)
+        const updated = [...timeTableInfo];
+        const lecdata = {sub:tempDSS.sub,teacher,classroom,lecfrom,lecto};
+        const sem = {dept:tempDSS.dept,sem:tempDSS.sem,batch}
         if(ind === -1){
-            let lecinfo = [];
-            const updated = [...timeTableInfo];
-            convertAndAddLectInfo(lecinfo,classroom,lecfrom,lecto,tempDSS.sub,teacher);
-            updated[day_ind].semRowsInfo.push({sem:{dept:tempDSS.dept,batch:batch,sem:tempDSS.sem,},dataobj:{labsInfo:[],lecInfo:lecinfo}})
-            setTimeTableInfo(updated)
+            updated[day_ind].semRowsInfo.push({sem:{dept:tempDSS.dept,batch:batch,sem:tempDSS.sem,},dataobj:{labsInfo:[],lecInfo:[]}})
+            addLectureWithSem(updated,day_ind,setRoomAvailability,setTeacherAvailability,lecdata,sem,setWorkload,lecfrom,lecto,setTimeTableInfo);
         }else{
-            console.log(timeTableInfo[day_ind].semRowsInfo[ind])
+            const semRowIndex = ind===-1?timeTableInfo[day_ind].semRowsInfo.length-1:ind;
+            AddLecture(lecdata,setTimeTableInfo,day_ind,semRowIndex,setRoomAvailability,setTeacherAvailability,sem,setWorkload)
         }
     }
+
     useEffect(() => {
-        async function helper(){
-            setIsLoading(true);
-            await fetchDept(setRDeptOptions);
-            setIsLoading(false);
-        }
-        helper();
-    }, []);
+        console.log("This is final time table info ------------------------------------");
+        console.log("Time Table Info",timeTableInfo);
+        console.log("teacher info",teacherAvailability)
+        console.log("Roome info",roomAvailability)
+        console.log("Lab info",labAvailability)
+        console.log("workload info ",workload)
+        console.log("alldata ",rallinfo)
+    }, [timeTableInfo,roomAvailability]);
     useEffect(() => {
         console.log(timeTableInfo)
     }, [timeTableInfo]);
@@ -137,8 +245,19 @@ export default function RefactorMain(){
                 </form>
             </div>
             {show && <RefactorBatchForm dayoptions={week_days} handleBatchSubmit={handleAddLecture} classrooms={rallinfo.classrooms.map((clss)=>clss.classroom)} teacheroptions={rallinfo.teachers.map((teacher)=>teacher.shortName)} batches={rallinfo.batches.map((batch)=>batch.batchName)}/>}
-            {showLab && <RefactorSubbatchForm/>}
-            <TimeTableView data={{timeTableInfo}}/>
+                {showLab && <RefactorSubbatchForm dayoptions={week_days} teacheroptions={rallinfo.teachers.map((teacher)=>teacher.shortName)} labs={rallinfo.labs.map((lab)=>lab.lab)} batches={rallinfo.batches.flatMap(batch=>batch.subBatch)}/>}
+            <TimeTableView
+                timeTableInfo={timeTableInfo}
+                workload={workload}
+                labAvailability={labAvailability}
+                roomAvailability={roomAvailability}
+                teacherAvailability={teacherAvailability}
+                setLabAvailability={setLabAvailability}
+                setTimeTableInfo={setTimeTableInfo}
+                setWorkload={setWorkload}
+                setTeacherAvailability={setTeacherAvailability}
+                setRoomAvailability={setRoomAvailability}
+            />
         </div>
     )
 }

@@ -7,7 +7,7 @@ export  default  function About(){
     const dayoptions = ["s","m",'t','t','f','s'];
     return (
         <div>
-            <RefactorMain/>
+            {/*<RefactorMain/>*/}
         </div>
     )
 }

@@ -17,6 +17,7 @@ import {
     timeConflict
 } from "./ConflictResolution"
 import {AuthContext} from "../../AuthContext";
+import {AddLecture, DeleteLecture} from "./lecture";
 const fetchAllDataInfo = async(semId,deptId,setAllDataInfo,batch)=>{
     try{
         const response = await fetch("/custom/getAllDataInfo",{
@@ -138,53 +139,10 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
         })
     }
     const receiveDataFromLec = (lec_data)=>{
-        setTimeTableInfo((prevState)=>{
-            const updated = [...prevState]
-            const lectures = updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo;
-            const labs = updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo;
-            const res2 = Rowconflict(labs,lectures,lec_data.lecfrom,lec_data.lecto);
-            if(res2.conflict){
-                window.alert(res2.message);
-                return prevState;
-            }else{
-                const res = roomAndTeacherAvailability(setRoomAvailability,setTeacherAvailability,lec_data,sem,dayIndex)
-                if(res.conflict){window.alert(res.message);return prevState}
-                else{
-                    updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo.push({data:lec_data});
-                    setWorkload((prevWorkload)=>{
-                        const workload = [...prevWorkload];
-                        const pos = workload.findIndex((work)=>work.id===lec_data.teacher._id);
-                        if(pos!==-1){
-                            console.log("position is ",pos)
-                            workload[pos].lectures = [...workload[pos].lectures,{lec_data}]
-                        }else{
-                            workload.push({id:lec_data.teacher._id,labs:[],lectures:[{lec_data}]})
-                        }
-                        return workload;
-                    })
-                    return updated;
-                }
-            }
-        })
+        AddLecture(lec_data,setTimeTableInfo,dayIndex,semRowIndex,setRoomAvailability,setTeacherAvailability,sem,setWorkload);
     }
     const handleLecDelete=(lecFrom,lecTo)=>{
-        const index = dataobj.lecInfo.findIndex((lec)=>(lec.data.lecfrom===lecFrom && lec.data.lecto===lecTo));
-        const updatedLec = dataobj.lecInfo.filter((lec,ind)=>ind!==index);
-        setTimeTableInfo((prevState)=>{
-            const updated = [...prevState]
-            const lec = updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo[index];
-            updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo = updatedLec;
-            removeRoomAvailability(setRoomAvailability,lec,lecFrom,lecTo,dayIndex);
-            removeTeacherAvailability(setTeacherAvailability,lec.data.teacher._id,lecFrom,lecTo,dayIndex);
-            setWorkload((prevWorkload)=>{
-                const workload = [...prevWorkload];
-                const tid = lec.data.teacher._id;
-                const wid = workload.findIndex((work)=>work.id===tid);
-                workload[wid].lectures = workload[wid].lectures.filter((lec)=>lec.lec_data.lecfrom!==lecFrom && lec.lec_data.lecto!==lecTo);
-                return workload;
-            })
-            return updated;
-        });
+        DeleteLecture(dataobj,lecFrom,lecTo,setTimeTableInfo,dayIndex,semRowIndex,setRoomAvailability,setTeacherAvailability,setWorkload);
     }
     const handleSemRowDelete = async ()=>{
         const ok = window.confirm("Are you sure to delete ? ");
