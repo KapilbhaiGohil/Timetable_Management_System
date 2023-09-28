@@ -7,7 +7,7 @@ import {useLocation} from "react-router-dom";
 import Button from "../Small-Level-Componenets/Button"
 import "../../Css/Higher-Level-Css/Pdf.scss"
 import {AuthContext} from "../../AuthContext";
-export default function Pdf() {
+export default function Pdf({received}) {
     const location = useLocation();
     const [timeTableInfo, setTimeTableInfo] = useState([]);
     const data = location.state?.ttData;
@@ -16,8 +16,10 @@ export default function Pdf() {
     useEffect(() => {
         if (data) {
             setTimeTableInfo(data.timeTableInfo);
+        }else if(received){
+            setTimeTableInfo(received);
         }
-    }, [data]);
+    }, [data,received]);
     const generatePdf = async () => {
         setIsLoading(true);
 
@@ -49,7 +51,7 @@ export default function Pdf() {
             <div
                 ref={pdfRef}
                 className={'time-table-outer'}
-                style={{ backgroundColor: 'white', color: 'black' }}
+                style={{ backgroundColor: 'white', color: 'black' ,minHeight:"0vh"}}
             >
                 {timeTableInfo.map((data, index) => (
                     <PdfDay

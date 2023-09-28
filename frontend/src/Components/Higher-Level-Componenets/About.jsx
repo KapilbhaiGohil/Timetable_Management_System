@@ -7,7 +7,6 @@ export  default  function About(){
     const dayoptions = ["s","m",'t','t','f','s'];
     return (
         <div>
-            <h1>Hello I am a about page</h1>
             <RefactorMain/>
         </div>
     )

@@ -22,4 +22,5 @@ subjectRouter.post('/add',async (req,res)=>{
         return res.status(500).send({message:"Internal server error"})
     }
 })
+
 module.exports = subjectRouter

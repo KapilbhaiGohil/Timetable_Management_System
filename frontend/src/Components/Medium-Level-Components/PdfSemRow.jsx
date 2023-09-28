@@ -1,8 +1,11 @@
 import {v4} from "uuid";
 import PdfLabDetails from "./PdfLabDetails";
 import PdfLecDetails from "./PdfLecDetails";
+import {useState} from "react";
 
 export default function PdfSemRow({sem,dataobj}){
+    console.log("data received at pdf semrow",dataobj,sem)
+    const [show,setshow] = useState(false);
     return(
         <div className={"sem-row"}>
             <div className={"sem-row-outer"}>

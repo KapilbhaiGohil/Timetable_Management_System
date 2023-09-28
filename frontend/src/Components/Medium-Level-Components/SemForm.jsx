@@ -3,81 +3,16 @@ import Button from "../Small-Level-Componenets/Button";
 import {useContext, useEffect, useState} from "react";
 import "../../Css/Medium-Level-Css/SemForm.scss"
 import {AuthContext} from "../../AuthContext";
+import {fetchDept, getBatch, getSemByDept} from "./Functions";
 
-async function fetchDept(setDeptOptions){
-    try{
-        const response = await fetch("/dept/getAllDept",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            }
-        })
-        if(response.ok){
-            const data = await response.json();
-            setDeptOptions(data);
-        }else{
-            window.alert(response.message)
-        }
-    }catch (e){
-        console.log(e);
-    }
-}
 
-const getSemByDept = async(dept,setSemOptions)=>{
-    try{
-        const response = await fetch('/sem/getSemByDept',{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({"deptCode":dept}),
-        })
-        const data = await response.json();
-        if(response.ok){
-            setSemOptions(data);
-        }else{
-            setSemOptions([]);
-            window.alert(data.message)
-        }
-    }catch (e){
-        setSemOptions([]);
-        console.log(e);
-    }
-}
-const getBatch=async (semId,setBatchOptions)=>{
-    try{
-        // window.alert(semId)
-        const response = await fetch("/custom/getBatchBySem",{
-            method:"POST",
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify({semId}),
-        });
-        const data = await response.json();
-        if(response.ok){
-            setBatchOptions(data);
-        }else{
-            setBatchOptions([]);
-            window.alert(data.message);
-        }
-    }catch (e){
-        setBatchOptions([])
-        console.log(e);
-    }
-}
 export default function SemForm ({sendDataToParent}){
-    const [sem,setSem] = useState({dept:"",sem:"",batch:""});
     const [semOptions,setSemOptions]=useState([]);
     const [deptOptions,setDeptOptions] = useState([]);
     const [batchOptions,setBatchOptions]=useState([]);
     const {setIsLoading} = useContext(AuthContext)
     const handleSelectionChange = async (event)=>{
         event.preventDefault();
-        setSem({
-            ...sem,
-            [event.target.name] : event.target.value,
-        });
         if(event.target.name==="dept"){
             await getSemByDept(event.target.value,setSemOptions);
         }else if(event.target.name==='sem'){
