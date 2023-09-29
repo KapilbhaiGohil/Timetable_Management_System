@@ -6,6 +6,6 @@ export  default  function DesignTimeTable(){
     const location = useLocation();
     const data = location.state?.ttData;
     return (
-        <RefactorMain />
+        <RefactorMain savedData={data}/>
     )
 }

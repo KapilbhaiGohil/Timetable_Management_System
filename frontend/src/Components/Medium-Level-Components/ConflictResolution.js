@@ -71,10 +71,12 @@ const labsAndTeacherAvailability = (setLabsAvailability,setTeacherAvailability,n
         }else{
             let final_subbatch_conflict=-1;
             settimeTableInfo((timeTableInfo)=>{
+                const subbatch_conflict_idx = timeTableInfo[dayindex].semRowsInfo[semRowIndex].dataobj.labsInfo.findIndex((l)=>l.labfrom === newlab.labfrom && l.labto === newlab.labto)
                 try{
-                    final_subbatch_conflict = timeTableInfo[dayindex].semRowsInfo[semRowIndex].dataobj.labsInfo[idx].labs.findIndex((l)=>l.sub_batch===newlab.sub_batch);
+                    final_subbatch_conflict = timeTableInfo[dayindex].semRowsInfo[semRowIndex].dataobj.labsInfo[subbatch_conflict_idx].labs.findIndex((l)=>l.sub_batch===newlab.sub_batch);
+                    console.log("This is a conflict for sub batch",timeTableInfo[dayindex].semRowsInfo[semRowIndex].dataobj.labsInfo[idx].labs,final_subbatch_conflict)
                 }catch (e) {
-
+                    console.log(e);
                 }
                 return timeTableInfo;
             })

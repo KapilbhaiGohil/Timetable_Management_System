@@ -19,9 +19,9 @@ import {
     labsAndTeacherAvailability,
     Rowconflict
 } from "../Medium-Level-Components/ConflictResolution";
-import {AddLab} from "../Medium-Level-Components/Lab";
+import {AddLab, AddLabWithSemRow} from "../Medium-Level-Components/Lab";
 import {parse} from "uuid";
-const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading){
+const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading,workload){
     setIsLoading(true);
     try{
         const response = await fetch("/timetable/add",{
@@ -29,7 +29,7 @@ const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvaila
             headers:{
                 "Content-Type":"application/json"
             },
-            body:JSON.stringify({timeTableInfo,labAvailability,roomAvailability,teacherAvailability}),
+            body:JSON.stringify({timeTableInfo,labAvailability,roomAvailability,teacherAvailability,workload}),
         });
         const data = await response.json();
         if(response.status === 200){
@@ -116,7 +116,7 @@ const getAllClassrooms=async(setClassroomsAvailability,week_days)=>{
 const createEmptyTimetableObject = () => ({
     semRowsInfo: [],
 });
-export default function RefactorMain(){
+export default function RefactorMain({savedData}){
     const [show,setShow] = useState(false);
     const [showLab,setShowLab] = useState(false);
     const [rsemOptions,setRSemOptions]=useState([]);
@@ -132,23 +132,32 @@ export default function RefactorMain(){
     const week_days = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
     const {setIsLoading} = useContext(AuthContext);
     useEffect(() => {
-        async function helper(){
-            let updated = [];
-            console.log(updated);
-            for (let i = 0; i < week_days.length; i++) {
-                const newobject = createEmptyTimetableObject();
-                newobject.day = week_days[i];
-                updated[i] = newobject
+        if(savedData){
+            console.log(savedData)
+            setWorkload(savedData.workload)
+            setTeacherAvailability(savedData.teacherAvailability)
+            setRoomAvailability(savedData.roomAvailability)
+            setTimeTableInfo(savedData.timeTableInfo)
+            setLabAvailability(savedData.labAvailability)
+        }else{
+            async function helper(){
+                let updated = [];
+                console.log(updated);
+                for (let i = 0; i < week_days.length; i++) {
+                    const newobject = createEmptyTimetableObject();
+                    newobject.day = week_days[i];
+                    updated[i] = newobject
+                }
+                await setTimeTableInfo(updated);
+                setIsLoading(true);
+                await fetchDept(setRDeptOptions);
+                await getAllLabs(setLabAvailability,week_days);
+                await getAllTeachers(setTeacherAvailability,week_days);
+                await getAllClassrooms(setRoomAvailability,week_days);
+                setIsLoading(false);
             }
-            await setTimeTableInfo(updated);
-            setIsLoading(true);
-            await fetchDept(setRDeptOptions);
-            await getAllLabs(setLabAvailability,week_days);
-            await getAllTeachers(setTeacherAvailability,week_days);
-            await getAllClassrooms(setRoomAvailability,week_days);
-            setIsLoading(false);
+            helper();
         }
-        helper();
     }, []);
     useEffect(() => {
         setShow(false);
@@ -227,42 +236,7 @@ export default function RefactorMain(){
         const ind = timeTableInfo[day_ind].semRowsInfo.findIndex((data)=>data.sem.sem._id===tempDSS.sem._id && data.sem.dept._id===tempDSS.dept._id && data.sem.batch._id===batch._id);
         if(ind === -1){
             updated[day_ind].semRowsInfo.push({sem:{dept:tempDSS.dept,batch:batch,sem:tempDSS.sem,},dataobj:{labsInfo:[],lecInfo:[]}})
-            const semRowIndex = updated[day_ind].semRowsInfo.length-1;
-            const dataobj = updated[day_ind].semRowsInfo[semRowIndex].dataobj
-            const index = dataobj.labsInfo.findIndex((lab)=>lab.labfrom===labdata.labfrom && lab.labto===labdata.labto);
-            if (index !== -1) {
-                    const  res = labsAndTeacherAvailability(setLabAvailability,setTeacherAvailability,labdata,sem,day_ind,semRowIndex,setTimeTableInfo);
-                    if(res.conflict){
-                        window.alert(res.message);
-                    }else{
-                        updated[day_ind].semRowsInfo[semRowIndex].dataobj.labsInfo[index].labs.push(labdata);
-                    }
-            } else {
-                console.log("no lab with from and to is exist already")
-                    const labs = updated[day_ind].semRowsInfo[semRowIndex].dataobj.labsInfo;
-                    const lectures = updated[day_ind].semRowsInfo[semRowIndex].dataobj.lecInfo;
-                    const res = Rowconflict(labs,lectures,labdata.labfrom,labdata.labto);
-                    if(res.conflict){window.alert(res.message);}
-                    else{
-                        const res2 = labsAndTeacherAvailability(setLabAvailability,setTeacherAvailability,labdata,sem,day_ind,semRowIndex,setTimeTableInfo);
-                        if(res2.conflict){
-                            window.alert(res2.message);
-                        }else{
-                            updated[day_ind].semRowsInfo[semRowIndex].dataobj.labsInfo =  [ ...updated[day_ind].semRowsInfo[semRowIndex].dataobj.labsInfo ,{labs:[labdata],labfrom: labdata.labfrom,labto:labdata.labto}];
-                        }
-                    }
-            }
-            setLabAvailability((prevState)=>{
-                const update_lab = [...prevState];
-                const lab_ind = update_lab[day_ind].data.findIndex((l)=>l.lab.lab===lab.lab)
-                console.log("hello there this is a lab ind",lab_ind);
-                console.log("This is a prev state inside lab update",prevState);
-                const upd_ind = update_lab[day_ind].data[lab_ind].availability.findIndex((obj)=>obj.from===convertIntoMinutes(labfrom) && obj.to===convertIntoMinutes(labto));
-                console.log("hello there this is a obj ind",upd_ind);
-                update_lab[day_ind].data[lab_ind].availability[upd_ind].no =1;
-                return update_lab
-            })
-            setTimeTableInfo((prevState)=>updated)
+            AddLabWithSemRow(updated,day_ind,labdata,setLabAvailability,setTeacherAvailability,sem,setTimeTableInfo,lab,labfrom,labto);
         }else{
             const semRowIndex = ind===-1?updated[day_ind].semRowsInfo.length-1:ind;
             const dataobj = updated[day_ind].semRowsInfo[semRowIndex].dataobj
@@ -319,6 +293,7 @@ export default function RefactorMain(){
                 setWorkload={setWorkload}
                 setTeacherAvailability={setTeacherAvailability}
                 setRoomAvailability={setRoomAvailability}
+                saveTimeTableInfo={saveTimeTableInfo}
             />
         </div>
     )

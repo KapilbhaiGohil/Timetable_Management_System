@@ -40,7 +40,7 @@ export default function TimeTableView({timeTableInfo,setWorkload,saveTimeTableIn
                     <Button onclick={handleDay} label={"Add Day"} />
                 </div>
             )}
-            <div className={"time-table-btn"}><Button label={"Save"} onclick={()=>saveTimeTableInfo(timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading)}/></div>
+            <div className={"time-table-btn"}><Button label={"Save"} onclick={()=>saveTimeTableInfo(timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading,workload)}/></div>
         </div>
     )
 }
