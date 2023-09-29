@@ -2,13 +2,13 @@ import RefactorDropdown from "../Small-Level-Componenets/RefactorDropdown";
 import RefactorTimeInput from "../Small-Level-Componenets/RefactorTimeInput";
 import "../../Css/Medium-Level-Css/RefactorBatchForm.scss"
 import Button from "../Small-Level-Componenets/Button"
-export default function RefactorSubbatchForm({batches,dayoptions,teacheroptions,labs}){
+export default function RefactorSubbatchForm({batches,dayoptions,teacheroptions,labs,onSubmit}){
     return(
         <div className={"batch-outer"}>
             <div className={"batch-heading"}>
                 <h1>Lab Form</h1>
             </div>
-            <form>
+            <form onSubmit={onSubmit}>
                 <div className={"batch-table"}>
                     <table>
                         <thead>
@@ -23,12 +23,12 @@ export default function RefactorSubbatchForm({batches,dayoptions,teacheroptions,
                         </thead>
                         <tbody>
                         <tr>
-                            <td><RefactorDropdown message={"Select Batch"} name={"subbatch"} options={batches}/></td>
+                            <td><RefactorDropdown message={"Select Batch"} name={"subBatch"} options={batches}/></td>
                             <td> <RefactorDropdown message={"Select Day"} name={"day"} options={dayoptions}/></td>
                             <td><RefactorDropdown message={"Select Teacher"} name={"teacher"} options={teacheroptions}/></td>
-                            <td><RefactorDropdown message={"Select Lab No"} name={"classroom"} options={labs}/></td>
-                            <td colSpan={"2"}><RefactorTimeInput /></td>
-                            <td className={"refactor-batch-btn"}><Button label={"Add Lab"}></Button></td>
+                            <td><RefactorDropdown message={"Select Lab No"} name={"lab"} options={labs}/></td>
+                            <td colSpan={"2"}><RefactorTimeInput name={"lab"}/></td>
+                            <td className={"refactor-batch-btn"}><Button type={"submit"} label={"Add Lab"}></Button></td>
                         </tr>
                         </tbody>
                     </table>

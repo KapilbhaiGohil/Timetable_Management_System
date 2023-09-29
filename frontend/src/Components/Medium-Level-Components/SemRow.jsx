@@ -7,17 +7,14 @@ import LabForm from "./LabForm";
 import LectureForm from "./LectureForm";
 import LabDetails from "./LabDetails";
 import {
-    labsAndTeacherAvailability, removeLabAvailability, removeLabAvailabilityOnRowDelete,
-    removeRoomAvailability,
+    removeLabAvailability, removeLabAvailabilityOnRowDelete,
     removeRoomAvailabilityOnRowDelete,
     removeTeacherAvailability,
     removeTeacherAvailabilityOnRowDelete,
-    roomAndTeacherAvailability,
-    Rowconflict,
-    timeConflict
 } from "./ConflictResolution"
 import {AuthContext} from "../../AuthContext";
-import {AddLecture, DeleteLecture} from "./lecture";
+import {AddLecture, DeleteLecture} from "./Lecture";
+import {AddLab} from "./Lab";
 const fetchAllDataInfo = async(semId,deptId,setAllDataInfo,batch)=>{
     try{
         const response = await fetch("/custom/getAllDataInfo",{
@@ -58,38 +55,7 @@ export default function SemRow({sem,dataobj,setTimeTableInfo,dayIndex,semRowInde
         fetch();
     }, [fetchAllDataInfo]);
     const receiveDataFromLab = (lab_data) => {
-        const ind = dataobj.labsInfo.findIndex((lab)=>lab.labfrom===lab_data.labfrom && lab.labto===lab_data.labto);
-        if (ind !== -1) {
-            setTimeTableInfo((prevState)=>{
-                const updated = [...prevState];
-                const  res = labsAndTeacherAvailability(setLabAvailability,setTeacherAvailability,lab_data,sem,dayIndex);
-                if(res.conflict){
-                    window.alert(res.message);
-                    return updated;
-                }else{
-                    updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo[ind].labs.push(lab_data);
-                    return updated;
-                }
-            });
-        } else {
-            setTimeTableInfo((prevState)=>{
-                const updated = [...prevState]
-                const labs = updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo;
-                const lectures = updated[dayIndex].semRowsInfo[semRowIndex].dataobj.lecInfo;
-                const res = Rowconflict(labs,lectures,lab_data.labfrom,lab_data.labto);
-                if(res.conflict){window.alert(res.message);return prevState}
-                else{
-                    const res2 = labsAndTeacherAvailability(setLabAvailability,setTeacherAvailability,lab_data,sem,dayIndex);
-                    if(res2.conflict){
-                        window.alert(res2.message);
-                        return updated;
-                    }else{
-                        updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo =  [ ...updated[dayIndex].semRowsInfo[semRowIndex].dataobj.labsInfo ,{labs:[lab_data],labfrom: lab_data.labfrom,labto:lab_data.labto}];
-                        return updated;
-                    }
-                }
-            })
-        }
+        AddLab(dataobj,lab_data,setTimeTableInfo,dayIndex,semRowIndex,setLabAvailability,setTeacherAvailability,sem);
     };
     const handleLabRemove=(labFrom,labTo)=>{
         const updatedLabs = [...dataobj.labsInfo];

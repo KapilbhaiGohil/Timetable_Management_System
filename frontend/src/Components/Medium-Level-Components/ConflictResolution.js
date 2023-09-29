@@ -49,7 +49,7 @@ const removeRoomAvailability=(setRoomAvailability,lec,lecFrom,lecTo,dayindex)=>{
     })
 }
 
-const labsAndTeacherAvailability = (setLabsAvailability,setTeacherAvailability,newlab,sem,dayindex)=>{
+const labsAndTeacherAvailability = (setLabsAvailability,setTeacherAvailability,newlab,sem,dayindex,semRowIndex,settimeTableInfo)=>{
     console.log("new lab conflict resolution ",newlab)
     const from = convertIntoMinutes(newlab.labfrom);
     const to = convertIntoMinutes(newlab.labto);
@@ -69,19 +69,35 @@ const labsAndTeacherAvailability = (setLabsAvailability,setTeacherAvailability,n
             message="Lab conflict for the lab "+newlab.labInfo.lab
             return prevLabs;
         }else{
-            const res = teacherAvailability(setTeacherAvailability,from,to,sem,newlab.teacher._id,dayindex);
-            if(res.conflict){
-                conflict = res.conflict;message = res.message;
-                return prevLabs;
+            let final_subbatch_conflict=-1;
+            settimeTableInfo((timeTableInfo)=>{
+                try{
+                    final_subbatch_conflict = timeTableInfo[dayindex].semRowsInfo[semRowIndex].dataobj.labsInfo[idx].labs.findIndex((l)=>l.sub_batch===newlab.sub_batch);
+                }catch (e) {
+
+                }
+                return timeTableInfo;
+            })
+            if(final_subbatch_conflict!==-1){
+                message = "Sub batch conflict for "+newlab.sub_batch;
+                conflict = true;
+                return updated;
             }else{
-                const i = updated[dayindex].data[idx].availability.findIndex((obj)=>obj.from===from && obj.to === to);
-                console.log("this is index for adding at max 2 lab",i);
-                if(i===-1){
-                    updated[dayindex].data[idx].availability.push({from,to,sem,no:1});
-                    return updated;
+                const res = teacherAvailability(setTeacherAvailability,from,to,sem,newlab.teacher._id,dayindex);
+                if(res.conflict){
+                    conflict = res.conflict;message = res.message;
+                    return prevLabs;
                 }else{
-                    updated[dayindex].data[idx].availability[i].no = 2;
-                    return updated;
+                    const i = updated[dayindex].data[idx].availability.findIndex((obj)=>obj.from===from && obj.to === to);
+                    console.log("this is index for adding at max 2 lab",i);
+                    if(i===-1){
+                        updated[dayindex].data[idx].availability.push({from,to,sem,no:1});
+                        return updated;
+                    }else{
+                        updated[dayindex].data[idx].availability[i].no = 2;
+                        return updated;
+                    }
+
                 }
             }
         }

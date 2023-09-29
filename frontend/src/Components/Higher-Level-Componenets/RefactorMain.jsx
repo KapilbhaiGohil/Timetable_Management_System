@@ -13,9 +13,14 @@ import {
 
 import {AuthContext} from "../../AuthContext";
 import TimeTableView from "./TimeTableView";
-import Pdf from "./Pdf";
-import {AddLecture, addLectureWithSem} from "../Medium-Level-Components/lecture";
-import {roomAndTeacherAvailability, Rowconflict} from "../Medium-Level-Components/ConflictResolution";
+import {AddLecture, addLectureWithSem} from "../Medium-Level-Components/Lecture";
+import {
+    convertIntoMinutes,
+    labsAndTeacherAvailability,
+    Rowconflict
+} from "../Medium-Level-Components/ConflictResolution";
+import {AddLab} from "../Medium-Level-Components/Lab";
+import {parse} from "uuid";
 const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading){
     setIsLoading(true);
     try{
@@ -207,7 +212,64 @@ export default function RefactorMain(){
             AddLecture(lecdata,setTimeTableInfo,day_ind,semRowIndex,setRoomAvailability,setTeacherAvailability,sem,setWorkload)
         }
     }
-
+    const handleAddLab = (event)=>{
+        event.preventDefault();
+        const batch = rallinfo.batches.find((batch)=>batch.subBatch.includes(event.target.subBatch.value));
+        const subbatch = event.target.subBatch.value;
+        const day_ind = week_days.findIndex((day)=>day===event.target.day.value);
+        const teacher = rallinfo.teachers.find((t)=>t.shortName===event.target.teacher.value);
+        const lab = rallinfo.labs.find((l)=>l.lab===parseInt(event.target.lab.value));
+        const labfrom = event.target.labfrom.value;
+        const labto = event.target.labto.value;
+        const updated = [...timeTableInfo];
+        const labdata = {labInfo:lab,labfrom,labto,sub:tempDSS.sub,teacher,sub_batch: subbatch};
+        const sem = {dept:tempDSS.dept,sem:tempDSS.sem,batch}
+        const ind = timeTableInfo[day_ind].semRowsInfo.findIndex((data)=>data.sem.sem._id===tempDSS.sem._id && data.sem.dept._id===tempDSS.dept._id && data.sem.batch._id===batch._id);
+        if(ind === -1){
+            updated[day_ind].semRowsInfo.push({sem:{dept:tempDSS.dept,batch:batch,sem:tempDSS.sem,},dataobj:{labsInfo:[],lecInfo:[]}})
+            const semRowIndex = updated[day_ind].semRowsInfo.length-1;
+            const dataobj = updated[day_ind].semRowsInfo[semRowIndex].dataobj
+            const index = dataobj.labsInfo.findIndex((lab)=>lab.labfrom===labdata.labfrom && lab.labto===labdata.labto);
+            if (index !== -1) {
+                    const  res = labsAndTeacherAvailability(setLabAvailability,setTeacherAvailability,labdata,sem,day_ind,semRowIndex,setTimeTableInfo);
+                    if(res.conflict){
+                        window.alert(res.message);
+                    }else{
+                        updated[day_ind].semRowsInfo[semRowIndex].dataobj.labsInfo[index].labs.push(labdata);
+                    }
+            } else {
+                console.log("no lab with from and to is exist already")
+                    const labs = updated[day_ind].semRowsInfo[semRowIndex].dataobj.labsInfo;
+                    const lectures = updated[day_ind].semRowsInfo[semRowIndex].dataobj.lecInfo;
+                    const res = Rowconflict(labs,lectures,labdata.labfrom,labdata.labto);
+                    if(res.conflict){window.alert(res.message);}
+                    else{
+                        const res2 = labsAndTeacherAvailability(setLabAvailability,setTeacherAvailability,labdata,sem,day_ind,semRowIndex,setTimeTableInfo);
+                        if(res2.conflict){
+                            window.alert(res2.message);
+                        }else{
+                            updated[day_ind].semRowsInfo[semRowIndex].dataobj.labsInfo =  [ ...updated[day_ind].semRowsInfo[semRowIndex].dataobj.labsInfo ,{labs:[labdata],labfrom: labdata.labfrom,labto:labdata.labto}];
+                        }
+                    }
+            }
+            setLabAvailability((prevState)=>{
+                const update_lab = [...prevState];
+                const lab_ind = update_lab[day_ind].data.findIndex((l)=>l.lab.lab===lab.lab)
+                console.log("hello there this is a lab ind",lab_ind);
+                console.log("This is a prev state inside lab update",prevState);
+                const upd_ind = update_lab[day_ind].data[lab_ind].availability.findIndex((obj)=>obj.from===convertIntoMinutes(labfrom) && obj.to===convertIntoMinutes(labto));
+                console.log("hello there this is a obj ind",upd_ind);
+                update_lab[day_ind].data[lab_ind].availability[upd_ind].no =1;
+                return update_lab
+            })
+            setTimeTableInfo((prevState)=>updated)
+        }else{
+            const semRowIndex = ind===-1?updated[day_ind].semRowsInfo.length-1:ind;
+            const dataobj = updated[day_ind].semRowsInfo[semRowIndex].dataobj
+            console.log(batch,subbatch,day_ind,teacher,lab,labfrom,labto,ind,labdata,sem);
+            AddLab(dataobj,labdata,setTimeTableInfo,day_ind,semRowIndex,setLabAvailability,setTeacherAvailability,sem);
+        }
+    }
     useEffect(() => {
         console.log("This is final time table info ------------------------------------");
         console.log("Time Table Info",timeTableInfo);
@@ -245,7 +307,7 @@ export default function RefactorMain(){
                 </form>
             </div>
             {show && <RefactorBatchForm dayoptions={week_days} handleBatchSubmit={handleAddLecture} classrooms={rallinfo.classrooms.map((clss)=>clss.classroom)} teacheroptions={rallinfo.teachers.map((teacher)=>teacher.shortName)} batches={rallinfo.batches.map((batch)=>batch.batchName)}/>}
-                {showLab && <RefactorSubbatchForm dayoptions={week_days} teacheroptions={rallinfo.teachers.map((teacher)=>teacher.shortName)} labs={rallinfo.labs.map((lab)=>lab.lab)} batches={rallinfo.batches.flatMap(batch=>batch.subBatch)}/>}
+            {showLab && <RefactorSubbatchForm dayoptions={week_days} teacheroptions={rallinfo.teachers.map((teacher)=>teacher.shortName)} labs={rallinfo.labs.map((lab)=>lab.lab)} onSubmit={handleAddLab} batches={rallinfo.batches.flatMap(batch=>batch.subBatch)}/>}
             <TimeTableView
                 timeTableInfo={timeTableInfo}
                 workload={workload}
