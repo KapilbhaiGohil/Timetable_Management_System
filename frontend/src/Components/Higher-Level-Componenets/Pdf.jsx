@@ -15,16 +15,14 @@ export default function Pdf({received}) {
     const {setIsLoading} = useContext(AuthContext)
     useEffect(() => {
         if (data) {
-            setTimeTableInfo(data.timeTableInfo);
+            setTimeTableInfo(data);
         }else if(received){
             setTimeTableInfo(received);
         }
     }, [data,received]);
     const generatePdf = async () => {
         setIsLoading(true);
-
         const input = pdfRef.current
-
         try {
             const canvas = await html2canvas(input);
             const imgData = canvas.toDataURL("image/png");

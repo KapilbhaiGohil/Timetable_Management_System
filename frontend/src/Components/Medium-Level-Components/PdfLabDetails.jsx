@@ -18,7 +18,7 @@ export default function PdfLabDetails({lab_data}){
         return (diff*8.38888888/60)+(8.5);
     }
     return(
-        <div className={"lab-lab-outer"} style={{width:`${getWidth()}vw`,position:"absolute",marginLeft:`${getPostion()}vw`,backgroundColor:"white",color:"black"}}>
+        <div className={"lab-lab-outer"} style={{width:`${getWidth()}vw`,position:"absolute",marginLeft:`${getPostion()}vw`,backgroundColor:"white",color:"black",borderColor:"black"}}>
             <div className={"lab-lab-time"}>
                 <label>{lab_data.labfrom} - {lab_data.labto}</label>
             </div>

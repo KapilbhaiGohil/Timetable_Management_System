@@ -4,7 +4,7 @@ export default function Listitem({timetable,onDelete,onPrint,onEdit}){
     return(
         <div className={"list-outer"}>
             <div className={"list-main"}>
-                <p> {timetable._id}</p>
+                <p> {timetable.name}</p>
             </div>
             <div className={"list-btn"}>
                 <Button label={"Edit"} onclick={onEdit}/>

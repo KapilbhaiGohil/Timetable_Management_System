@@ -3,6 +3,7 @@ import RefactorSubbatchForm from "../Medium-Level-Components/RefactorSubbatchFor
 import RefactorDropdown from "../Small-Level-Componenets/RefactorDropdown";
 import Button from "../Small-Level-Componenets/Button"
 import "../../Css/Higher-Level-Css/RefactorMain.scss"
+import "../../Css/Small-Level-Css/save.scss"
 import {useContext, useEffect, useState} from "react";
 import {
     fetchDept,
@@ -14,25 +15,26 @@ import {
 import {AuthContext} from "../../AuthContext";
 import TimeTableView from "./TimeTableView";
 import {AddLecture, addLectureWithSem} from "../Medium-Level-Components/Lecture";
-import {
-    convertIntoMinutes,
-    labsAndTeacherAvailability,
-    Rowconflict
-} from "../Medium-Level-Components/ConflictResolution";
 import {AddLab, AddLabWithSemRow} from "../Medium-Level-Components/Lab";
-import {parse} from "uuid";
-const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading,workload){
-    setIsLoading(true);
+import Input from "../Small-Level-Componenets/Input";
+const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvailability,teacherAvailability,workload,_id,setId,name){
+    let saveData ={name,timeTableInfo,labAvailability,roomAvailability,teacherAvailability,workload};
+    if(_id){
+        saveData = {name,timeTableInfo,labAvailability,roomAvailability,teacherAvailability,workload,_id};
+    }
     try{
         const response = await fetch("/timetable/add",{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"
             },
-            body:JSON.stringify({timeTableInfo,labAvailability,roomAvailability,teacherAvailability,workload}),
+            body:JSON.stringify(saveData),
         });
         const data = await response.json();
         if(response.status === 200){
+            if(data._id){
+                setId({_id:data._id,name:name});    
+            }
             window.alert(data.message);
         }else{
             window.alert(data.message);
@@ -40,8 +42,6 @@ const saveTimeTableInfo=async function (timeTableInfo,labAvailability,roomAvaila
     }catch (e) {
         window.alert(e);
         console.log(e);
-    }finally {
-        setIsLoading(false);
     }
 }
 const getAllTeachers=async(setTeachresAvailability,week_days)=>{
@@ -117,6 +117,8 @@ const createEmptyTimetableObject = () => ({
     semRowsInfo: [],
 });
 export default function RefactorMain({savedData}){
+    const [save,setSave] = useState({});
+    const [saveshow,setsaveshow] = useState(false);
     const [show,setShow] = useState(false);
     const [showLab,setShowLab] = useState(false);
     const [rsemOptions,setRSemOptions]=useState([]);
@@ -139,6 +141,7 @@ export default function RefactorMain({savedData}){
             setRoomAvailability(savedData.roomAvailability)
             setTimeTableInfo(savedData.timeTableInfo)
             setLabAvailability(savedData.labAvailability)
+            setSave({_id:savedData._id,name:savedData.name})
         }else{
             async function helper(){
                 let updated = [];
@@ -148,8 +151,8 @@ export default function RefactorMain({savedData}){
                     newobject.day = week_days[i];
                     updated[i] = newobject
                 }
-                await setTimeTableInfo(updated);
                 setIsLoading(true);
+                await setTimeTableInfo(updated);
                 await fetchDept(setRDeptOptions);
                 await getAllLabs(setLabAvailability,week_days);
                 await getAllTeachers(setTeacherAvailability,week_days);
@@ -244,6 +247,22 @@ export default function RefactorMain({savedData}){
             AddLab(dataobj,labdata,setTimeTableInfo,day_ind,semRowIndex,setLabAvailability,setTeacherAvailability,sem);
         }
     }
+    const handleSave=async(event)=>{
+        event.preventDefault();
+        setsaveshow(true);
+    }
+    const finalSave = async (event)=>{
+        event.preventDefault();
+        let name = event.target.name.value;
+        setIsLoading(true)
+        if(save._id){
+            await saveTimeTableInfo(timeTableInfo,labAvailability,roomAvailability,teacherAvailability,workload,save._id,setSave,name);
+        }else{
+            await saveTimeTableInfo(timeTableInfo,labAvailability,roomAvailability,teacherAvailability,workload,save._id,setSave,name);
+        }
+        setIsLoading(false)
+        setsaveshow(false);
+    }
     useEffect(() => {
         console.log("This is final time table info ------------------------------------");
         console.log("Time Table Info",timeTableInfo);
@@ -270,7 +289,6 @@ export default function RefactorMain({savedData}){
                         </thead>
                         <tbody>
                             <tr>
-                                {/*<td><Dropdown name={"dept"} onSelectionChange={handleSelectionChange} options={rdeptOptions.map((dept)=>dept.code)}/></td>*/}
                                 <td><RefactorDropdown name={"dept"}  onSelectionChange={handleSelectionChange} options={rdeptOptions.map((dept)=>dept.code)}/></td>
                                 <td><RefactorDropdown name={"sem"} onSelectionChange={handleSelectionChange} options={rsemOptions.map((sem)=>sem.semNo)}/></td>
                                 <td><RefactorDropdown name={"sub"} onSelectionChange={handleSelectionChange}  options={rsubOptions.map((sub)=>sub.subName)}/></td>
@@ -293,8 +311,18 @@ export default function RefactorMain({savedData}){
                 setWorkload={setWorkload}
                 setTeacherAvailability={setTeacherAvailability}
                 setRoomAvailability={setRoomAvailability}
-                saveTimeTableInfo={saveTimeTableInfo}
+                saveTimeTableInfo={handleSave}
             />
+            {saveshow &&  <div className={"save-outer"}>
+                    <form onSubmit={finalSave}>
+                        <Input type={"text"} value={save && save.name} label={"Name"} name={"name"} />
+                        <div className={"save-btn"}>
+                            <Button type={"submit"} label={"Save"}/>
+                            <Button label={"Close"} onclick={()=>{setsaveshow(false)}}/>
+                        </div>
+                    </form>
+            </div>}
+
         </div>
     )
 }

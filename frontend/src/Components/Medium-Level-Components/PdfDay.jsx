@@ -6,7 +6,7 @@ export default function PdfDay({dayData,dayIndex}){
     return(
         <div className={"day"}>
             <div className={"day-outer"}>
-                <div className={"day-name"}>
+                <div className={"day-name"} style={{borderColor:"black"}}>
                     <label>{dayData.day}</label>
                 </div>
                 <div className={"day-sem"}>

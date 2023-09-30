@@ -4,9 +4,11 @@ import {useContext, useEffect, useState} from "react";
 import {v4} from "uuid";
 import Button from "../Small-Level-Componenets/Button";
 import {AuthContext} from "../../AuthContext";
+import Input from "../Small-Level-Componenets/Input";
 
 export default function TimeTableView({timeTableInfo,setWorkload,saveTimeTableInfo,workload,labAvailability,roomAvailability,teacherAvailability,setTimeTableInfo,setLabAvailability,setRoomAvailability,setTeacherAvailability}){
     const [show,setShow] = useState(false);
+    const[saveshow,setsaveshow] = useState(false);
     const week_days = ["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
     const {setIsLoading} = useContext(AuthContext)
     useEffect(() => {
@@ -40,7 +42,7 @@ export default function TimeTableView({timeTableInfo,setWorkload,saveTimeTableIn
                     <Button onclick={handleDay} label={"Add Day"} />
                 </div>
             )}
-            <div className={"time-table-btn"}><Button label={"Save"} onclick={()=>saveTimeTableInfo(timeTableInfo,labAvailability,roomAvailability,teacherAvailability,setIsLoading,workload)}/></div>
+            <div className={"time-table-btn"}><Button label={"Save"} onclick={saveTimeTableInfo}/></div>
         </div>
     )
 }

@@ -61,7 +61,9 @@ export default  function SavedTimeTable(){
         navigate("/design",{state:{ttData:timetable}});
     }
     const handlePrint=(timetable)=>{
-        navigate("/pdf",{state:{ttData:timetable}});
+        console.log(timetable)
+        const filtered_data = timetable.timeTableInfo.filter((obj)=>obj.semRowsInfo.length>0);
+        navigate("/pdf",{state:{ttData:filtered_data}});
     }
     return(
         <div>

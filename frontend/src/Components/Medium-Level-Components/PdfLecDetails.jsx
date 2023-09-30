@@ -16,7 +16,7 @@ export default function PdfLecDetails({lec_data}){
         return (diff*8.38888888/60)+(8.5);
     }
     return(
-        <div className={"lec-lab-outer"} style={{width:`${getWidth()}vw`,position:"absolute",marginLeft:`${getPostion()}vw`,backgroundColor:"white",color:"black"}}>
+        <div className={"lec-lab-outer"} style={{width:`${getWidth()}vw`,position:"absolute",marginLeft:`${getPostion()}vw`,backgroundColor:"white",color:"black",borderColor:"black"}}>
             <div className={"lec-lab-time"}>
                 <label>{lec_data.lecfrom}-{lec_data.lecto}</label>
             </div>

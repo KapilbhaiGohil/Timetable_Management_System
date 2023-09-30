@@ -9,7 +9,7 @@ export default function PdfSemRow({sem,dataobj}){
     return(
         <div className={"sem-row"}>
             <div className={"sem-row-outer"}>
-                <div className={"sem-row-info"} style={{backgroundColor:"white",color:"black"}}>
+                <div className={"sem-row-info"} style={{backgroundColor:"white",color:"black",borderColor:"black"}}>
                     <div className={"sem-row-dept"}>
                         <label>{sem.dept.code}</label>
                     </div>
