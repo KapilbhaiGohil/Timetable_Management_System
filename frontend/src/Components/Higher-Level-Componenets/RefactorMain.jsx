@@ -153,7 +153,6 @@ export default function RefactorMain({savedData}){
                 }
                 setIsLoading(true);
                 await setTimeTableInfo(updated);
-                await fetchDept(setRDeptOptions);
                 await getAllLabs(setLabAvailability,week_days);
                 await getAllTeachers(setTeacherAvailability,week_days);
                 await getAllClassrooms(setRoomAvailability,week_days);
@@ -161,6 +160,8 @@ export default function RefactorMain({savedData}){
             }
             helper();
         }
+        async function f(){await fetchDept(setRDeptOptions);}
+        f();
     }, []);
     useEffect(() => {
         setShow(false);
@@ -202,7 +203,6 @@ export default function RefactorMain({savedData}){
             setShowLab(true)
             setTempDss({dept,sem,sub});
         }
-
     }
     const handleAddLecture=(event)=>{
         event.preventDefault();
