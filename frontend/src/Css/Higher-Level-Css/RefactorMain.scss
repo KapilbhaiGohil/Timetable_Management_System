@@ -1,0 +1,31 @@
+@import "Colors";
+
+.main-outer{
+  color: $first;
+  .main-table{
+    form{
+      padding: 1rem;
+    }
+    table{
+      text-transform: uppercase;
+      font-size: 1rem;
+        th{
+          width: 15rem;
+          height: 1.4rem;
+        }
+        td{
+          width: 15rem;
+          .refactor-dropdown{
+            width: 100%;
+          }
+          .button-container{
+            width:11rem;
+            height: 5rem;
+            button{
+              border-radius: 0.5rem;
+            }
+          }
+        }
+    }
+  }
+}

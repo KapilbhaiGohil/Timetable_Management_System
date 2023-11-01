@@ -1,0 +1,78 @@
+@import "../Higher-Level-Css/Colors";
+.sem-row{
+  .sem-row-forms{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 80vw;
+    .sem-row-forms-div{
+      width: 30vw;
+      height: 61vh;
+    }
+    .sem-row-forms-btn{
+      width: 7rem;
+      height: 5rem;
+    }
+
+    .dropdown-container{
+      >form{
+        .button-container{
+          width: auto;
+          height: auto;
+        }
+      }
+    }
+  }
+  .sem-row-outer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    .sem-row-info{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      color: $first;
+      //background-color: ;
+      width: 8.5vw;
+      height: 20vh;
+      padding: 1rem;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-radius: 1rem;
+      border: 2px solid $second;
+      .sem-row-info-btn{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+        >.button-container{
+          padding: 0;
+          width: 100%;
+          >button{
+            background-color: $btndark;
+            padding: 0.2rem;
+            border-radius: 0.3rem;
+            font-size: 0.7rem;
+            margin: 0.2rem;
+          }
+        }
+      }
+      .sem-row-dept{
+
+      }
+      hr{
+        width: 100%;
+      }
+      .sem-row-sem{
+        width: 85%;
+        height: 85%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+}

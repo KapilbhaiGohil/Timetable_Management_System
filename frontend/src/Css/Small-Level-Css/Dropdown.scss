@@ -1,0 +1,25 @@
+@import "../Higher-Level-Css/Colors";
+.outer-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  color: $first;
+  font:1rem $text1;
+  width: auto;
+  height: auto;
+  margin:0.8rem;
+  .label-container{
+
+  }
+  .options-container{
+      select{
+        padding: 0.5rem 0.5rem;
+        width: 6rem;
+        height: 100%;
+        border-radius: 0.4rem;
+        cursor: pointer;
+      }
+  }
+}

@@ -5,19 +5,22 @@ import {AiOutlineMail} from "react-icons/ai"
 import {VscUnlock} from "react-icons/vsc"
 import {BsPerson} from "react-icons/bs"
 import "../../Css/Higher-Level-Css/Register.scss"
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../../AuthContext";
 export  default  function Register(){
     const Navigate = useNavigate();
     const [user,setUser]=useState({name:"",email:"",password:"",cpassword:""});
+    const {setIsLoading} = useContext(AuthContext)
     const handleSubmit=async (event)=>{
         event.preventDefault();
         const {name,email,password,cpassword} = user;
         if(password!==cpassword){
             window.alert("Password and confirm password didn't match")
         }else {
+            setIsLoading(true)
             try {
-                const res = await fetch("/register", {
+                const res = await fetch("auth/register", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -25,15 +28,16 @@ export  default  function Register(){
                     body: JSON.stringify({name: name, email: email, password: password})
                 });
                 const data = await res.json();
-                console.log(data);
-                if(res.status===201){
-                    window.alert("data saved succesfully");
+                // console.log(data);
+                if(res.ok){
                     Navigate("/login");
                 }else{
                     window.alert(data.message);
                 }
             } catch (e) {
-                console.log(e);
+                window.alert(e.message);
+            }finally {
+                setIsLoading(false)
             }
         }
     }
@@ -52,10 +56,10 @@ export  default  function Register(){
                 <div className={"form-container"}>
                     <form onSubmit={handleSubmit}>
                         <div className={"inputs-container"}>
-                            <div><Input label={"Name"} name={"name"} onchange={handleInputs} type={"text"} icon={<BsPerson size={"2rem"} color={"#1976d2"}/>}/></div>
-                            <div><Input label={"E-mail"} name={"email"} type={"email"} onchange={handleInputs} icon={<AiOutlineMail size={"2rem"} color={"#1976d2"}/>}/></div>
-                            <div><Input label={"Password"} name={"password"} type={"password"} onchange={handleInputs} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
-                            <div><Input label={"Confirm Password"} name={"cpassword"} type={"password"} onchange={handleInputs} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
+                            <div><Input required={true} label={"Name"} name={"name"} onchange={handleInputs} type={"text"} icon={<BsPerson size={"2rem"} color={"#1976d2"}/>}/></div>
+                            <div><Input required={true} label={"E-mail"} name={"email"} type={"email"} onchange={handleInputs} icon={<AiOutlineMail size={"2rem"} color={"#1976d2"}/>}/></div>
+                            <div><Input required={true} label={"Password"} name={"password"} type={"password"} onchange={handleInputs} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
+                            <div><Input required={true} label={"Confirm Password"} name={"cpassword"} type={"password"} onchange={handleInputs} icon={<VscUnlock size={"2rem"} color={"#1976d2"}/>}/></div>
                             <div className={"btn-container"}><Button label={"Register"} type={"submit"}/></div>
                         </div>
                     </form>

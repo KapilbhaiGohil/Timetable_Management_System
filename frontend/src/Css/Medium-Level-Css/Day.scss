@@ -1,0 +1,41 @@
+@import "../Higher-Level-Css/Colors";
+.day{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  .day-outer{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    .day-name{
+      border: 2px solid $second;
+      border-radius: 1rem;
+      margin: 1rem;
+      align-self: stretch;
+      width: 10vw;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+    .day-sem{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      >.button-container{
+        width: 12rem;
+        height: 4rem;
+        border-radius: 1rem;
+        >button{
+          border-radius: 0.5rem;
+        }
+      }
+      >div{
+        margin: 1rem;
+      }
+    }
+  }
+}

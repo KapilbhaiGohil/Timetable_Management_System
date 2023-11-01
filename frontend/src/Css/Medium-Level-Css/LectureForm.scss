@@ -1,0 +1,26 @@
+@import "../Higher-Level-Css/Colors";
+.dropdown-container{
+  padding: 3rem;
+  width: 30vw;
+  height: 61vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3rem;
+  background-color:#095077;
+  //z-index: 1;
+  .button-container{
+    >button{
+      padding: 1rem;
+      background-color: rgba(0, 0, 0, 0.87);
+    }
+  }
+  >form{
+    width: 100%;
+  }
+  >h1{
+    color: $first;
+    font: 2rem  cursive;
+  }
+}

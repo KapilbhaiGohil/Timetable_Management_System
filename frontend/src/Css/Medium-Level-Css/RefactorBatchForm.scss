@@ -1,0 +1,34 @@
+@import "../Higher-Level-Css/Colors";
+
+.batch-outer{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  color: $first;
+  .batch-heading{
+      font-size: 1rem;
+  }
+  form{
+    padding: 1rem;
+  }
+  .batch-table{
+      table{
+        th{
+          width: 4rem;
+        }
+        td{
+          width: 4rem;
+        }
+        .refactor-batch-btn{
+          width: 11rem;
+          height: 5rem;
+          .button-container{
+            >button{
+              border-radius: 0.5rem;
+            }
+          }
+        }
+      }
+  }
+}

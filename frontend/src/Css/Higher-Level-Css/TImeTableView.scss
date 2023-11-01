@@ -1,0 +1,24 @@
+@import "Colors";
+
+.time-table-outer{
+  font-weight: 800;
+  color: $first;
+  background-color: $back;
+  padding: 1rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 100vh;
+  .time-table-btn{
+    width: 12%;
+    .button-container{
+      width: 8rem;
+      height: 4rem;
+      >button{
+        border-radius: 0.4rem;
+      }
+    }
+  }
+}
